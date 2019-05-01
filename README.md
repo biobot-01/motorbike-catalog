@@ -10,6 +10,12 @@ In order to run this project, you will need to have the following:
 * Flask
 ## Project Contents
 The repo has the following files:
-* List the main files
+```
+.
+.editorconfig
+.gitignore
+LICENSE.txt
+README.md
+```
 ## Project Setup
 1. How to get the project up and running
