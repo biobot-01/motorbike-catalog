@@ -15,5 +15,12 @@ class User(Base):
     picture = Column(String)
 
 
+class Manufacturer(Base):
+    __tablename__ = 'manufacturer'
+
+    id = Column(Integer, primary_key=True)
+    name = Column(String(60), index=True, nullable=False)
+
+
 engine = create_engine('sqlite:///../motorbike_catalog.db')
 Base.metadata.create_all(engine)
