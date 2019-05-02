@@ -22,5 +22,14 @@ class Manufacturer(Base):
     name = Column(String(60), index=True, nullable=False)
 
 
+class Motorbike(Base):
+    __tablename__ = 'motorbike'
+
+    id = Column(Integer, primary_key=True)
+    model = Column(String(70), nullable=False)
+    engine = Column(String(140), nullable=False)
+    capacity = Column(String(40), nullable=False)
+
+
 engine = create_engine('sqlite:///../motorbike_catalog.db')
 Base.metadata.create_all(engine)
