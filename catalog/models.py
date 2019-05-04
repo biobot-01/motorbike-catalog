@@ -34,6 +34,8 @@ class Motorbike(Base):
     max_power = Column(String(9), nullable=False)
     max_torque = Column(String(10), nullable=False)
     image = Column(String, nullable=False)
+    manufacturer_id = Column(Integer, ForeignKey('manufacturer.id'))
+    manufacturer = relationship(Manufacturer)
 
 
 engine = create_engine('sqlite:///../motorbike_catalog.db')
