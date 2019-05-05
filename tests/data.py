@@ -31,7 +31,10 @@ manufacturers = [
 
 
 def main():
-    pass
+    for name in manufacturers:
+        manufacturer = Manufacturer(name=name)
+        session.add(manufacturer)
+    session.commit()
 
 
 if __name__ == '__main__':
