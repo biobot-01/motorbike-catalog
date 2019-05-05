@@ -22,14 +22,14 @@ def index():
     return 'Welcome to the index page'
 
 
-@app.route('/bikes/<manufacturer>')
-def bikes(manufacturer):
-    return 'Bikes built by {}'.format(manufacturer)
+@app.route('/bikes/<manufacturer_slug>')
+def bikes(manufacturer_slug):
+    return 'Bikes built by {}'.format(manufacturer_slug)
 
 
-@app.route('/model/<manufacturer>/<slug>')
-def model(manufacturer, slug):
-    return '{} {}, year {}'.format(manufacturer, model, year)
+@app.route('/model/<manufacturer_slug>/<motorbike_slug>')
+def model(manufacturer_slug, motorbike_slug):
+    return '{} {}, year {}'.format(manufacturer_slug, model, year)
 
 
 def main():

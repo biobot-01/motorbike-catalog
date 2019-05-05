@@ -26,19 +26,19 @@ else:
     print('Test 1 PASSED: Successfully made GET request to /')
 
 # Make a get request to bike manufacturer
-print('Test 2: Making a GET requests to /bikes/<manufacturer>')
+print('Test 2: Making a GET requests to /bikes/<manufacturer_slug>')
 try:
-    manufacturers = ['Honda', 'Kawasaki', 'Suzuki', 'Yamaha']
+    manufacturers = ['honda', 'kawasaki', 'suzuki', 'yamaha']
     for manufacturer in manufacturers:
         url = address + '/bikes/{}'.format(manufacturer)
         r = requests.get(url)
         r.raise_for_status()
 except HTTPError as http_e:
     print('Test 2 FAILED: Could not make GET requests to '
-          '/bikes/<manufacturer>')
+          '/bikes/<manufacturer_slug>')
     print(http_e)
     sys.exit()
 else:
     print('Test 2 PASSED: Successfully made GET requests to '
-          '/bikes/<manufacturer>')
+          '/bikes/<manufacturer_slug>')
     print('ALL TESTS PASSED!!')
