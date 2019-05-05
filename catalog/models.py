@@ -22,7 +22,8 @@ class Manufacturer(Base):
     __tablename__ = 'manufacturer'
 
     id = Column(Integer, primary_key=True)
-    name = Column(String(60), index=True, nullable=False)
+    slug = Column(String(250), index=True, nullable=False)
+    name = Column(String(60), nullable=False)
 
 
 class Motorbike(Base):
