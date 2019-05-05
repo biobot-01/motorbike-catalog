@@ -1,14 +1,26 @@
 #!/usr/bin/env python3
 
 from flask import Flask
+from sqlalchemy import create_engine
+from sqlalchemy.orm import sessionmaker
 
+from models import Base
+# Create flask instance
 app = Flask(__name__)
+# Connect to database
+engine = create_engine('sqlite:///../motorbike_catalog.db')
+# Bind engine to metadata of Base class to access through DBSession
+Base.metadata.bind = engine
+# Create a DBSession instance
+DBSession = sessionmaker(bind=engine)
+# Create a session for the database
+session = DBSession()
 
 
 def main():
     app.secret_key = 'super_secret_key'
     app.debug = True
-    app.run(host='127.0.0.1', port=8000)
+    app.run(host='127.0.0.1', port=8000, threaded=False)
 
 
 if __name__ == '__main__':
