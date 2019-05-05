@@ -14,6 +14,21 @@ DBSession = sessionmaker(bind=engine)
 # Create a session for the database
 session = DBSession()
 
+manufacturers = [
+    'Aprilia',
+    'BMW',
+    'Ducati',
+    'Harley-Davidson',
+    'Honda',
+    'Kawasaki',
+    'KTM',
+    'MV Agusta',
+    'Royal Enfield',
+    'Suzuki',
+    'Triumph',
+    'Yamaha'
+]
+
 
 def main():
     pass
