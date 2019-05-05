@@ -17,6 +17,21 @@ DBSession = sessionmaker(bind=engine)
 session = DBSession()
 
 
+@app.route('/')
+def index():
+    return 'Welcome to the index page'
+
+
+@app.route('/bikes/<manufacturer>')
+def bikes(manufacturer):
+    return 'Bikes built by {}'.format(manufacturer)
+
+
+@app.route('/model/<manufacturer>/<slug>')
+def model(manufacturer, slug):
+    return '{} {}, year {}'.format(manufacturer, model, year)
+
+
 def main():
     app.secret_key = 'super_secret_key'
     app.debug = True
