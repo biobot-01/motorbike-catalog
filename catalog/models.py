@@ -29,6 +29,7 @@ class Motorbike(Base):
     __tablename__ = 'motorbike'
 
     id = Column(Integer, primary_key=True)
+    slug = Column(String(250), index=True, nullable=False)
     model = Column(String(70), nullable=False)
     year = Column(String(4), nullable=False)
     engine = Column(String(140), nullable=False)
