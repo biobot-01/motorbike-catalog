@@ -30,7 +30,7 @@ class Motorbike(Base):
 
     id = Column(Integer, primary_key=True)
     model = Column(String(70), nullable=False)
-    year = Column(Integer(4), nullable=False)
+    year = Column(String(4), nullable=False)
     engine = Column(String(140), nullable=False)
     displacement = Column(String(7), nullable=False)
     curb_mass = Column(String(6), nullable=False)
