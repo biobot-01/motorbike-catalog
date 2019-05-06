@@ -30,11 +30,15 @@ manufacturers = [
 ]
 
 
-def main():
-    for name in manufacturers:
+def add_manufacturers(list_of_names):
+    for name in list_of_names:
         manufacturer = Manufacturer(name=name)
         session.add(manufacturer)
     session.commit()
+
+
+def main():
+    add_manufacturers(manufacturers)
 
 
 if __name__ == '__main__':
