@@ -399,8 +399,10 @@ def add_bikes(list_of_bikes):
 
 
 def main():
+    print('Adding data to database...')
     add_manufacturers(manufacturers)
     add_bikes(bikes)
+    print('Successfully added all data!')
 
 
 if __name__ == '__main__':
