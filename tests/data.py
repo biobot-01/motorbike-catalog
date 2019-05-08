@@ -379,6 +379,24 @@ def add_manufacturers(list_of_names):
     session.commit()
 
 
+def add_bikes(list_of_bikes):
+    for dic in list_of_bikes:
+        bike = Motorbike(
+            model=dic['model'],
+            year=dic['year'],
+            engine=dic['engine'],
+            displacement=dic['displacement'],
+            curb_mass=dic['curb_mass'],
+            fuel_capacity=dic['fuel_capacity'],
+            max_power=dic['max_power'],
+            max_torque=dic['max_torque'],
+            image=dic['image'],
+            manufacturer_id=dic['manufacturer_id'],
+        )
+        session.add(bike)
+    session.commit()
+
+
 def main():
     add_manufacturers(manufacturers)
 
