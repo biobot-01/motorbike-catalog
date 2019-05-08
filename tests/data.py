@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# -*- coding: utf-8 -*-
 
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
@@ -399,6 +400,7 @@ def add_bikes(list_of_bikes):
 
 def main():
     add_manufacturers(manufacturers)
+    add_bikes(bikes)
 
 
 if __name__ == '__main__':
