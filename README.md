@@ -6,8 +6,10 @@ Authenticated users have the ability to post, edit & delete their own items.
 Implements RESTful architecture for API endpoints that return JSON data of the items & categories.
 ## Requirements
 In order to run this project, you will need to have the following:
-* Python > 3.6
-* Flask
+* Python >= 3.6
+* Flask >= 1.0.2
+* SQLAlchemy >= 1.3.3
+* requests >= 2.21.0
 ## Project Contents
 The repo has the following files:
 ```
