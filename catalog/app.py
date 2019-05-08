@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-from flask import Flask
+from flask import Flask, render_template
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
@@ -19,17 +19,17 @@ session = DBSession()
 
 @app.route('/')
 def index():
-    return 'Welcome to the index page'
+    return render_template('home.html')
 
 
 @app.route('/bikes/<manufacturer_slug>')
 def bikes(manufacturer_slug):
-    return 'Bikes built by {}'.format(manufacturer_slug)
+    return render_template('bikes.html')
 
 
 @app.route('/model/<manufacturer_slug>/<motorbike_slug>')
 def model(manufacturer_slug, motorbike_slug):
-    return '{} {}, year {}'.format(manufacturer_slug, model, year)
+    return render_template('model.html')
 
 
 def main():
