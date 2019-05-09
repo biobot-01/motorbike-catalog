@@ -8,7 +8,7 @@ from models import Base
 # Create flask instance
 app = Flask(__name__)
 # Connect to database
-engine = create_engine('sqlite:///../motorbike_catalog.db')
+engine = create_engine('sqlite:///motorbike_catalog.db')
 # Bind engine to metadata of Base class to access through DBSession
 Base.metadata.bind = engine
 # Create a DBSession instance

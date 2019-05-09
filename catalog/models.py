@@ -45,5 +45,5 @@ class Motorbike(Base):
     manufacturer = relationship(Manufacturer)
 
 
-engine = create_engine('sqlite:///../motorbike_catalog.db')
+engine = create_engine('sqlite:///motorbike_catalog.db')
 Base.metadata.create_all(engine)
