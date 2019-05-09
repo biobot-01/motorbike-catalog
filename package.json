@@ -1,0 +1,31 @@
+{
+  "name": "motorbike-catalog",
+  "version": "1.0.0",
+  "description": "flask motorbike catalog app",
+  "main": "catalog/app.py",
+  "directories": {
+    "test": "tests"
+  },
+  "scripts": {
+    "test": "echo 'Test command works'"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/biobot-01/motorbike-catalog.git"
+  },
+  "keywords": [
+    "python",
+    "flask",
+    "bulma"
+  ],
+  "author": "Kevin Michael",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/biobot-01/motorbike-catalog/issues"
+  },
+  "homepage": "https://github.com/biobot-01/motorbike-catalog#readme",
+  "devDependencies": {
+    "bulma": "^0.7.4",
+    "node-sass": "^4.12.0"
+  }
+}
