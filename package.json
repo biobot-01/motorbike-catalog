@@ -10,15 +10,16 @@
     "clean": "rimraf catalog/static/css/*",
     "sass": "node-sass --omit-source-map-url --output-style expanded bulma/custom.scss catalog/static/css/main.css",
     "autoprefix": "postcss catalog/static/css/main.css --use autoprefixer --no-map --output catalog/static/css/main.css",
-    "preserve": "python catalog/app.py",
-    "serve": "browser-sync start 'http://localhost:8000' 'catalog/static' 'catalog/templates' --watch --port 8000 --no-open",
     "build:css": "run-s sass autoprefix",
     "prebuild": "run-s clean",
-    "build": "run-s build:*",
+    "build": "run-p build:*",
     "watch:css": "onchange 'bulma' -- run-s sass",
-    "watch": "run-p serve watch:*",
+    "watch": "run-p watch:*",
+    "serve:app": "python catalog/app.py",
+    "serve:broswer": "browser-sync start --proxy 'http://localhost:8000' --serveStatic 'catalog/static' 'catalog/templates' --watch --no-open",
+    "serve": "run-p serve:*",
     "deploy": "run-s build",
-    "start": "run-s watch"
+    "start": "run-p serve watch"
   },
   "repository": {
     "type": "git",
