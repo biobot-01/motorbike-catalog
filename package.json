@@ -7,7 +7,18 @@
     "test": "tests"
   },
   "scripts": {
-    "test": "echo 'Test command works'"
+    "clean": "rimraf catalog/static/css/*",
+    "sass": "node-sass --omit-source-map-url --output-style expanded bulma/custom.scss catalog/static/css/main.css",
+    "autoprefix": "postcss catalog/static/css/main.css --use autoprefixer --no-map --output catalog/static/css/main.css",
+    "preserve": "python catalog/app.py",
+    "serve": "browser-sync start 'http://localhost:8000' 'catalog/static' 'catalog/templates' --watch --port 8000 --no-open",
+    "build:css": "run-s sass autoprefix",
+    "prebuild": "run-s clean",
+    "build": "run-s build:*",
+    "watch:css": "onchange 'bulma' -- run-s sass",
+    "watch": "run-p serve watch:*",
+    "deploy": "run-s build",
+    "start": "run-s watch"
   },
   "repository": {
     "type": "git",
@@ -25,7 +36,11 @@
   },
   "homepage": "https://github.com/biobot-01/motorbike-catalog#readme",
   "devDependencies": {
+    "autoprefixer": "^9.5.1",
+    "browser-sync": "^2.26.5",
     "bulma": "^0.7.4",
-    "node-sass": "^4.12.0"
+    "node-sass": "^4.12.0",
+    "postcss-cli": "^6.1.2",
+    "rimraf": "^2.6.3"
   }
 }
