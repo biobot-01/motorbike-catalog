@@ -5,7 +5,7 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from slugify import slugify
 
-from models import Base, Manufacturer, Motorbike
+from catalog.models import Base, Manufacturer, Motorbike
 
 # Connect to database
 engine = create_engine('sqlite:///motorbike_catalog.db')
@@ -405,7 +405,3 @@ def main():
     add_manufacturers(manufacturers)
     add_bikes(bikes)
     print('Successfully added all data!')
-
-
-if __name__ == '__main__':
-    main()
