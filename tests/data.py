@@ -3,6 +3,7 @@
 
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
+from slugify import slugify
 
 from models import Base, Manufacturer, Motorbike
 
@@ -375,7 +376,7 @@ bikes = [
 
 def add_manufacturers(list_of_names):
     for name in list_of_names:
-        manufacturer = Manufacturer(name=name)
+        manufacturer = Manufacturer(slug=slugify(name), name=name)
         session.add(manufacturer)
     session.commit()
 
@@ -383,6 +384,7 @@ def add_manufacturers(list_of_names):
 def add_bikes(list_of_bikes):
     for dic in list_of_bikes:
         bike = Motorbike(
+            slug=slugify(dic['model'] + dic['year']),
             model=dic['model'],
             year=dic['year'],
             engine=dic['engine'],
