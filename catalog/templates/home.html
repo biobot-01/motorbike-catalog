@@ -1,7 +1,39 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<div class="">
-  <h1>Home Page</h1>
+<div class="columns is-centered">
+  <div class="column is-10">
+    <div class="box">
+      <div class="columns">
+        <div class="column is-3">
+          {% include 'includes/_aside.html' %}
+        </div>
+
+        <div class="column">
+          <div class="content">
+            <h3>Latest Models</h3>
+
+            <ul>
+              <li>
+                <a href="#">ZXR 600</a>
+              </li>
+              <li>
+                <a href="#">YZF 600</a>
+              </li>
+              <li>
+                <a href="#">CBR 600</a>
+              </li>
+              <li>
+                <a href="#">Street Fighter 600</a>
+              </li>
+              <li>
+                <a href="#">Speed Triple 800</a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
 {% endblock %}
