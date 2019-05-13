@@ -32,9 +32,15 @@ def index():
 @app.route('/bikes/<manufacturer_slug>')
 def bikes(manufacturer_slug):
     manufacturers = session.query(Manufacturer).all()
+    manufacturer = session.query(Manufacturer).filter_by(
+        slug=manufacturer_slug).first()
+    manufacturer_models = session.query(Motorbike).join(
+        Manufacturer).filter_by(slug=manufacturer_slug).all()
     return render_template(
         'bikes.html',
         manufacturers=manufacturers,
+        manufacturer=manufacturer,
+        models=manufacturer_models,
     )
 
 
