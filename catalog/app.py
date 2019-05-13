@@ -44,7 +44,7 @@ def bikes(manufacturer_slug):
     )
 
 
-@app.route('/model/<manufacturer_slug>/<motorbike_slug>')
+@app.route('/models/<manufacturer_slug>/<motorbike_slug>')
 def model(manufacturer_slug, motorbike_slug):
     return render_template('model.html')
 
