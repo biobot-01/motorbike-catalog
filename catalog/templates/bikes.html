@@ -11,25 +11,18 @@
 
         <div class="column">
           <div class="content">
-            <h3>Manufacturer {Suzuki}</h3>
+            <h3>{{ manufacturer.name }}</h3>
 
-            <ul>
-              <li>
-                <a href="#">GSX R600</a>
-              </li>
-              <li>
-                <a href="#">GSX R600</a>
-              </li>
-              <li>
-                <a href="#">GSX R600</a>
-              </li>
-              <li>
-                <a href="#">GSX R600</a>
-              </li>
-              <li>
-                <a href="#">GSX R600</a>
-              </li>
-            </ul>
+            {% if models %}
+              <ul>
+                {% for m in models %}
+                  <li>
+                    <a href="{{ url_for('model', manufacturer_slug=manufacturer.slug, motorbike_slug=m.slug) }} ">{{ m.model }}</a>
+                    <span>({{ m.year }})</span>
+                  </li>
+                {% endfor %}
+              </ul>
+            {% endif %}
           </div>
         </div>
       </div>
