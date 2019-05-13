@@ -1,21 +1,13 @@
 <aside class="menu">
   <h2 class="menu-label">Manufacturers</h2>
 
-  <ul class="menu-list">
-    <li>
-      <a href="#">Yamaha</a>
-    </li>
-    <li>
-      <a href="#">Suzuki</a>
-    </li>
-    <li>
-      <a href="#">Honda</a>
-    </li>
-    <li>
-      <a href="#">Aprilia</a>
-    </li>
-    <li>
-      <a href="#">Kawasaki</a>
-    </li>
-  </ul>
+  {% if manufacturers %}
+    <ul class="menu-list">
+      {% for m in manufacturers %}
+        <li>
+          <a href="{{ url_for('bikes', manufacturer_slug=m.slug) }}">{{ m.name }}</a>
+        </li>
+      {% endfor %}
+    </ul>
+  {% endif %}
 </aside>
