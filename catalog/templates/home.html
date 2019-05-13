@@ -13,23 +13,16 @@
           <div class="content">
             <h3>Latest Models</h3>
 
-            <ul>
-              <li>
-                <a href="#">ZXR 600</a>
-              </li>
-              <li>
-                <a href="#">YZF 600</a>
-              </li>
-              <li>
-                <a href="#">CBR 600</a>
-              </li>
-              <li>
-                <a href="#">Street Fighter 600</a>
-              </li>
-              <li>
-                <a href="#">Speed Triple 800</a>
-              </li>
-            </ul>
+            {% if models %}
+              <ul>
+                {% for m in models %}
+                <li>
+                  <a href="{{ url_for('model', manufacturer_slug=m.manufacturer.slug, motorbike_slug=m.slug)}}">{{ m.model }}</a>
+                  <span>({{ m.manufacturer.name }})</span>
+                </li>
+                {% endfor %}
+              </ul>
+            {% endif %}
           </div>
         </div>
       </div>
