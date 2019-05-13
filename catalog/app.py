@@ -4,7 +4,7 @@ from flask import Flask, render_template
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
-from models import Base
+from models import Base, Motorbike
 # Create flask instance
 app = Flask(__name__)
 # Connect to database
@@ -19,7 +19,9 @@ session = DBSession()
 
 @app.route('/')
 def index():
-    return render_template('home.html')
+    latest_models = session.query(Motorbike).order_by(
+        Motorbike.created_on.desc()).limit(7).all()
+    return render_template('home.html', models=latest_models)
 
 
 @app.route('/bikes/<manufacturer_slug>')
