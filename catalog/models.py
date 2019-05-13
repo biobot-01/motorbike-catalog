@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 
-from sqlalchemy import (Column, ForeignKey, Integer, String, DateTime,
-                        func)
+from datetime import datetime
+
+from sqlalchemy import (Column, ForeignKey, Integer, String, DateTime)
 from sqlalchemy import create_engine
 from sqlalchemy.orm import relationship
 from sqlalchemy.ext.declarative import declarative_base
@@ -40,7 +41,7 @@ class Motorbike(Base):
     max_power = Column(String(40), nullable=False)
     max_torque = Column(String(40), nullable=False)
     image = Column(String, nullable=False)
-    created_at = Column(DateTime, server_default=func.now())
+    created_on = Column(DateTime, default=datetime.now())
     manufacturer_id = Column(Integer, ForeignKey('manufacturer.id'))
     manufacturer = relationship(Manufacturer)
 
