@@ -11,7 +11,7 @@ Base = declarative_base()
 
 
 class User(Base):
-    __tablename__ = 'user'
+    __tablename__ = 'users'
 
     id = Column(Integer, primary_key=True)
     name = Column(String(70), nullable=False)
@@ -20,7 +20,7 @@ class User(Base):
 
 
 class Manufacturer(Base):
-    __tablename__ = 'manufacturer'
+    __tablename__ = 'manufacturers'
 
     id = Column(Integer, primary_key=True)
     slug = Column(String(250), index=True, nullable=False)
@@ -28,7 +28,7 @@ class Manufacturer(Base):
 
 
 class Motorbike(Base):
-    __tablename__ = 'motorbike'
+    __tablename__ = 'motorbikes'
 
     id = Column(Integer, primary_key=True)
     slug = Column(String(250), index=True, nullable=False)
@@ -42,7 +42,7 @@ class Motorbike(Base):
     max_torque = Column(String(40), nullable=False)
     image = Column(String, nullable=False)
     created_on = Column(DateTime, default=datetime.now())
-    manufacturer_id = Column(Integer, ForeignKey('manufacturer.id'))
+    manufacturer_id = Column(Integer, ForeignKey('manufacturers.id'))
     manufacturer = relationship(Manufacturer)
 
 
