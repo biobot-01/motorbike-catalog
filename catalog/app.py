@@ -46,7 +46,9 @@ def bikes(manufacturer_slug):
 
 @app.route('/models/<manufacturer_slug>/<motorbike_slug>')
 def model(manufacturer_slug, motorbike_slug):
-    return render_template('model.html')
+    manufacturer_model = session.query(Motorbike).filter_by(
+            slug=motorbike_slug).first()
+    return render_template('model.html', model=manufacturer_model)
 
 
 def main():
