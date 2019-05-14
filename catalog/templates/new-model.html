@@ -1,0 +1,97 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="columns is-centered">
+  <div class="column is-6">
+    <div class="box">
+      <div class="content">
+        <h4 class="title is-4 has-text-centered">New {{ manufacturer.name }} Model</h4>
+
+        <form action="{{ url_for('new_model', manufacturer_slug=manufacturer_slug) }}" method="post">
+          <div class="field">
+            <label class="label" for="image">Image</label>
+
+            <div class="control">
+              <input class="input" type="url" name="image" placeholder="https://sitename.com/path/to/image.jpg">
+            </div>
+          </div>
+
+          <div class="field">
+            <label class="label" for="model">Model</label>
+
+            <div class="control">
+              <input class="input" type="text" name="model" size="140" placeholder="Model Name" required autofocus>
+            </div>
+          </div>
+
+          <div class="field">
+            <label class="label" for="year">Year</label>
+
+            <div class="control">
+              <input class="input" type="number" min="1900" max="2020" name="year" size="4" placeholder="1900" required>
+            </div>
+          </div>
+
+          <div class="field">
+            <label class="label" for="engine">Engine</label>
+
+            <div class="control">
+              <input class="input" type="text" name="engine" size="140" placeholder="4-stroke, liquid cooled, DOHC, 4 valves per cylinder" required>
+            </div>
+          </div>
+
+          <div class="field">
+            <label class="label" for="displacement">Displacement</label>
+
+            <div class="control">
+              <input class="input" type="text" name="displacement" size="7" placeholder="999 cc" required>
+            </div>
+          </div>
+
+          <div class="field">
+            <label class="label" for="max_power">Max Power</label>
+
+            <div class="control">
+              <input class="input" type="text" name="max_power" size="40" placeholder="100 hp @ 10,000 rpm" required>
+            </div>
+          </div>
+
+          <div class="field">
+            <label class="label" for="max_torque">Max Torque</label>
+
+            <div class="control">
+              <input class="input" type="text" name="max_torque" size="40" placeholder="80 Nm @ 8,000 rpm" required>
+            </div>
+          </div>
+
+          <div class="field">
+            <label class="label" for="fuel_capacity">Fuel Capacity</label>
+
+            <div class="control">
+              <input class="input" type="text" name="fuel_capacity" size="6" placeholder="13.5 l" required>
+            </div>
+          </div>
+
+          <div class="field">
+            <label class="label" for="curb_mass">Curb Mass</label>
+
+            <div class="control">
+              <input class="input" type="text" name="curb_mass" size="6" placeholder="200 kg" required>
+            </div>
+          </div>
+
+          <div class="field is-grouped">
+            <div class="control">
+              <button class="button is-link" type="submit">Create</button>
+            </div>
+
+            <div class="control">
+              <a class="button is-text" href="{{ url_for('bikes', manufacturer_slug=manufacturer.slug) }}">Cancel</a>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
