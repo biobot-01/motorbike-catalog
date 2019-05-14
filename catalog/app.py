@@ -54,6 +54,13 @@ def model(manufacturer_slug, motorbike_slug):
     return render_template('model.html', model=manufacturer_model)
 
 
+@app.route('/models/<manufacturer_slug>/new', methods=['GET', 'POST'])
+def new_model(manufacturer_slug):
+    manufacturer = session.query(Manufacturer).filter_by(
+        slug=manufacturer_slug).first()
+    return render_template('new-model.html', manufacturer=manufacturer)
+
+
 def main():
     app.secret_key = 'super_secret_key'
     app.debug = True
