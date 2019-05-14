@@ -34,8 +34,11 @@ def bikes(manufacturer_slug):
     manufacturers = session.query(Manufacturer).all()
     manufacturer = session.query(Manufacturer).filter_by(
         slug=manufacturer_slug).first()
-    manufacturer_models = session.query(Motorbike).join(
-        Manufacturer).filter_by(slug=manufacturer_slug).all()
+    manufacturer_models = session.query(
+        Motorbike.model,
+        Motorbike.year,
+        Motorbike.slug,
+    ).filter_by(manufacturer_id=manufacturer.id).all()
     return render_template(
         'bikes.html',
         manufacturers=manufacturers,
