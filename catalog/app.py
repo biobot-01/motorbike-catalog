@@ -61,6 +61,15 @@ def new_model(manufacturer_slug):
     return render_template('new-model.html', manufacturer=manufacturer)
 
 
+@app.route(
+    '/models/<manufacturer_slug>/<motorbike_slug>/edit',
+    methods=['GET', 'POST'])
+def edit_model(manufacturer_slug, motorbike_slug):
+    manufacturer_model = session.query(Motorbike).filter_by(
+        slug=motorbike_slug).first()
+    return render_template('edit-model.html', model=manufacturer_model)
+
+
 def main():
     app.secret_key = 'super_secret_key'
     app.debug = True
