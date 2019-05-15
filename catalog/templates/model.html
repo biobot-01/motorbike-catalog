@@ -60,7 +60,7 @@
 
       <div class="card-footer">
         <a class="card-footer-item" href="{{ url_for('bikes', manufacturer_slug=model.manufacturer.slug) }}">Back</a>
-        <a class="card-footer-item" href="#">Edit</a>
+        <a class="card-footer-item" href="{{ url_for('edit_model', manufacturer_slug=model.manufacturer.slug, motorbike_slug=model.slug) }}">Edit</a>
         <a class="card-footer-item" href="#">Delete</a>
       </div>
     </div>
