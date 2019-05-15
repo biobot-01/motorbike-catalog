@@ -1,0 +1,97 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="columns is-centered">
+  <div class="column is-6">
+    <div class="box">
+      <div class="content">
+        <h4 class="title is-4 has-text-centered">Edit {{ model.manufacturer.name }} {{ model.model }}</h4>
+
+        <form action="{{ url_for('edit_model', manufacturer_slug=model.manufacturer.slug, motorbike_slug=model.slug) }}" method="post">
+          <div class="field">
+            <label class="label" for="image">Image</label>
+
+            <div class="control">
+              <input class="input" type="url" name="image" placeholder="{{ model.image }}" autofocus>
+            </div>
+          </div>
+
+          <div class="field">
+            <label class="label" for="model">Model</label>
+
+            <div class="control">
+              <input class="input" type="text" name="model" size="140" placeholder="{{ model.model }}">
+            </div>
+          </div>
+
+          <div class="field">
+            <label class="label" for="year">Year</label>
+
+            <div class="control">
+              <input class="input" type="number" min="1900" max="2020" name="year" size="4" placeholder="{{ model.year }}">
+            </div>
+          </div>
+
+          <div class="field">
+            <label class="label" for="engine">Engine</label>
+
+            <div class="control">
+              <textarea class="textarea" name="engine"  size="140"  placeholder="{{ model.engine }}" rows="2" cols="80"></textarea>
+            </div>
+          </div>
+
+          <div class="field">
+            <label class="label" for="displacement">Displacement</label>
+
+            <div class="control">
+              <input class="input" type="text" name="displacement" size="7" placeholder="{{ model.displacement }}">
+            </div>
+          </div>
+
+          <div class="field">
+            <label class="label" for="max_power">Max Power</label>
+
+            <div class="control">
+              <input class="input" type="text" name="max_power" size="40" placeholder="{{ model.max_power }}">
+            </div>
+          </div>
+
+          <div class="field">
+            <label class="label" for="max_torque">Max Torque</label>
+
+            <div class="control">
+              <input class="input" type="text" name="max_torque" size="40" placeholder="{{ model.max_torque }}">
+            </div>
+          </div>
+
+          <div class="field">
+            <label class="label" for="fuel_capacity">Fuel Capacity</label>
+
+            <div class="control">
+              <input class="input" type="text" name="fuel_capacity" size="6" placeholder="{{ model.fuel_capacity }}">
+            </div>
+          </div>
+
+          <div class="field">
+            <label class="label" for="curb_mass">Curb Mass</label>
+
+            <div class="control">
+              <input class="input" type="text" name="curb_mass" size="6" placeholder="{{ model.curb_mass }}">
+            </div>
+          </div>
+
+          <div class="field is-grouped">
+            <div class="control">
+              <button class="button is-link" type="submit">Update</button>
+            </div>
+
+            <div class="control">
+              <a class="button is-text" href="{{ url_for('model', manufacturer_slug=model.manufacturer.slug, motorbike_slug=model.slug) }}">Cancel</a>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
