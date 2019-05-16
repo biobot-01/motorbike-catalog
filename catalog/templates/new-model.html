@@ -9,7 +9,7 @@
 
         <form action="{{ url_for('new_model', manufacturer_slug=manufacturer.slug) }}" method="post">
           <div class="field">
-            <label class="label" for="image">Image</label>
+            <label class="label" for="image">Image URL</label>
 
             <div class="control">
               <input class="input" type="url" name="image" placeholder="https://example.com/path/to/image.jpg" autofocus>
