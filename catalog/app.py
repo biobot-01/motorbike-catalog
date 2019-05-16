@@ -41,7 +41,8 @@ def motorbikes(manufacturer_slug):
         Motorbike.model,
         Motorbike.year,
         Motorbike.slug,
-    ).filter_by(manufacturer_id=manufacturer.id).all()
+    ).filter_by(manufacturer_id=manufacturer.id).order_by(
+        Motorbike.slug, Motorbike.year).all()
     return render_template(
         'motorbikes.html',
         manufacturers=manufacturers,
