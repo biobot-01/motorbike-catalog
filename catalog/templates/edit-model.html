@@ -5,14 +5,14 @@
   <div class="column is-6">
     <div class="box">
       <div class="content">
-        <h4 class="title is-4 has-text-centered">Edit {{ model.manufacturer.name }} {{ model.model }}</h4>
+        <h4 class="title is-4 has-text-centered">Edit {{ motorbike.manufacturer.name }} {{ motorbike.model }}</h4>
 
-        <form action="{{ url_for('edit_model', manufacturer_slug=model.manufacturer.slug, motorbike_slug=model.slug) }}" method="post">
+        <form action="{{ url_for('edit_model', manufacturer_slug=motorbike.manufacturer.slug, motorbike_slug=motorbike.slug) }}" method="post">
           <div class="field">
-            <label class="label" for="image">Image</label>
+            <label class="label" for="image">Image URL</label>
 
             <div class="control">
-              <input class="input" type="url" name="image" placeholder="{{ model.image }}" autofocus>
+              <input class="input" type="url" name="image" value="{{ request.form['image'] or motorbike.image if motorbike.image != '/static/img/default-bike.png' }}" autofocus>
             </div>
           </div>
 
@@ -20,7 +20,7 @@
             <label class="label" for="model">Model</label>
 
             <div class="control">
-              <input class="input" type="text" name="model" size="140" placeholder="{{ model.model }}">
+              <input class="input" type="text" name="model" size="140" value="{{ request.form['model'] or motorbike.model }}" required>
             </div>
           </div>
 
@@ -28,7 +28,7 @@
             <label class="label" for="year">Year</label>
 
             <div class="control">
-              <input class="input" type="number" min="1900" max="2020" name="year" size="4" placeholder="{{ model.year }}">
+              <input class="input" type="number" min="1900" max="2020" name="year" size="4" value="{{ request.form['year'] or motorbike.year }}" required>
             </div>
           </div>
 
@@ -36,7 +36,7 @@
             <label class="label" for="engine">Engine</label>
 
             <div class="control">
-              <textarea class="textarea" name="engine"  size="140"  placeholder="{{ model.engine }}" rows="2" cols="80"></textarea>
+              <textarea class="textarea" name="engine"  size="140" rows="2" cols="80" required>{{ request.form['engine'] or motorbike.engine }}</textarea>
             </div>
           </div>
 
@@ -44,7 +44,7 @@
             <label class="label" for="displacement">Displacement</label>
 
             <div class="control">
-              <input class="input" type="text" name="displacement" size="7" placeholder="{{ model.displacement }}">
+              <input class="input" type="text" name="displacement" size="7" value="{{ request.form['displacement'] or motorbike.displacement }}" required>
             </div>
           </div>
 
@@ -52,7 +52,7 @@
             <label class="label" for="max_power">Max Power</label>
 
             <div class="control">
-              <input class="input" type="text" name="max_power" size="40" placeholder="{{ model.max_power }}">
+              <input class="input" type="text" name="max_power" size="40" value="{{ request.form['max_power'] or motorbike.max_power }}" required>
             </div>
           </div>
 
@@ -60,7 +60,7 @@
             <label class="label" for="max_torque">Max Torque</label>
 
             <div class="control">
-              <input class="input" type="text" name="max_torque" size="40" placeholder="{{ model.max_torque }}">
+              <input class="input" type="text" name="max_torque" size="40" value="{{ request.form['max_torque'] or motorbike.max_torque }}" required>
             </div>
           </div>
 
@@ -68,7 +68,7 @@
             <label class="label" for="fuel_capacity">Fuel Capacity</label>
 
             <div class="control">
-              <input class="input" type="text" name="fuel_capacity" size="6" placeholder="{{ model.fuel_capacity }}">
+              <input class="input" type="text" name="fuel_capacity" size="6" value="{{ request.form['fuel_capacity'] or motorbike.fuel_capacity }}" required>
             </div>
           </div>
 
@@ -76,7 +76,7 @@
             <label class="label" for="curb_mass">Curb Mass</label>
 
             <div class="control">
-              <input class="input" type="text" name="curb_mass" size="6" placeholder="{{ model.curb_mass }}">
+              <input class="input" type="text" name="curb_mass" size="6" value="{{ request.form['curb_mass'] or motorbike.curb_mass }}" required>
             </div>
           </div>
 
@@ -86,7 +86,7 @@
             </div>
 
             <div class="control">
-              <a class="button is-text" href="{{ url_for('model', manufacturer_slug=model.manufacturer.slug, motorbike_slug=model.slug) }}">Cancel</a>
+              <a class="button is-text" href="{{ url_for('model', manufacturer_slug=motorbike.manufacturer.slug, motorbike_slug=motorbike.slug) }}">Cancel</a>
             </div>
           </div>
         </form>
