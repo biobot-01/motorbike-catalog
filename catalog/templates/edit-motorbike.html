@@ -7,7 +7,7 @@
       <div class="content">
         <h4 class="title is-4 has-text-centered">Edit {{ motorbike.manufacturer.name }} {{ motorbike.model }}</h4>
 
-        <form action="{{ url_for('edit_model', manufacturer_slug=motorbike.manufacturer.slug, motorbike_slug=motorbike.slug) }}" method="post">
+        <form action="{{ url_for('edit_motorbike', manufacturer_slug=motorbike.manufacturer.slug, motorbike_slug=motorbike.slug) }}" method="post">
           <div class="field">
             <label class="label" for="image">Image URL</label>
 
@@ -86,7 +86,7 @@
             </div>
 
             <div class="control">
-              <a class="button is-text" href="{{ url_for('model', manufacturer_slug=motorbike.manufacturer.slug, motorbike_slug=motorbike.slug) }}">Cancel</a>
+              <a class="button is-text" href="{{ url_for('motorbike', manufacturer_slug=motorbike.manufacturer.slug, motorbike_slug=motorbike.slug) }}">Cancel</a>
             </div>
           </div>
         </form>

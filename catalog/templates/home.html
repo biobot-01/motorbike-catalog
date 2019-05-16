@@ -13,11 +13,11 @@
           <div class="content">
             <h3>Latest Models</h3>
 
-            {% if models %}
+            {% if motorbikes %}
               <ul>
-                {% for m in models %}
+                {% for m in motorbikes %}
                 <li>
-                  <a href="{{ url_for('model', manufacturer_slug=m.manufacturer.slug, motorbike_slug=m.slug)}}">{{ m.model }}</a>
+                  <a href="{{ url_for('motorbike', manufacturer_slug=m.manufacturer.slug, motorbike_slug=m.slug)}}">{{ m.model }}</a>
                   <span>({{ m.manufacturer.name }})</span>
                 </li>
                 {% endfor %}

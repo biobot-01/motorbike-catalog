@@ -11,15 +11,15 @@
 
         <div class="column">
           <div class="content">
-            <a class="button is-primary is-medium" href="{{ url_for('new_model', manufacturer_slug=manufacturer.slug) }}">Add Model</a>
+            <a class="button is-primary is-medium" href="{{ url_for('new_motorbike', manufacturer_slug=manufacturer.slug) }}">Add Model</a>
 
             <h3>{{ manufacturer.name }}</h3>
 
-            {% if models %}
+            {% if motorbikes %}
               <ul>
-                {% for m in models %}
+                {% for m in motorbikes %}
                   <li>
-                    <a href="{{ url_for('model', manufacturer_slug=manufacturer.slug, motorbike_slug=m.slug) }} ">{{ m.model }}</a>
+                    <a href="{{ url_for('motorbike', manufacturer_slug=manufacturer.slug, motorbike_slug=m.slug) }} ">{{ m.model }}</a>
                     <span>({{ m.year }})</span>
                   </li>
                 {% endfor %}

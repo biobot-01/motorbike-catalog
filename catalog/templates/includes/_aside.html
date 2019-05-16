@@ -5,7 +5,7 @@
     <ul class="menu-list">
       {% for m in manufacturers %}
         <li>
-          <a href="{{ url_for('bikes', manufacturer_slug=m.slug) }}">{{ m.name }}</a>
+          <a href="{{ url_for('motorbikes', manufacturer_slug=m.slug) }}">{{ m.name }}</a>
         </li>
       {% endfor %}
     </ul>

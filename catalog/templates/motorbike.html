@@ -5,12 +5,12 @@
   <div class="column is-8">
     <div class="card">
       <div class="card-header">
-        <h2 class="card-header-title is-size-4 is-centered">{{ model.manufacturer.name }} {{ model.model }}</h2>
+        <h2 class="card-header-title is-size-4 is-centered">{{ motorbike.manufacturer.name }} {{ motorbike.model }}</h2>
       </div>
 
       <div class="card-image">
         <figure class="image">
-          <img src="{{ model.image }}" alt="{{ model.manufacturer.name }} {{ model.model }} {{ model.year }}">
+          <img src="{{ motorbike.image }}" alt="{{ motorbike.manufacturer.name }} {{ motorbike.model }} {{ motorbike.year }}">
         </figure>
       </div>
 
@@ -18,49 +18,49 @@
         <div class="content">
           <dl class="is-flex">
             <dt style="width:25%;">Model</dt>
-            <dd style="width:75%;">{{ model.model }}</dd>
+            <dd style="width:75%;">{{ motorbike.model }}</dd>
           </dl>
 
           <dl class="is-flex">
             <dt style="width:25%;">Year</dt>
-            <dd style="width:75%;">{{ model.year }}</dd>
+            <dd style="width:75%;">{{ motorbike.year }}</dd>
           </dl>
 
           <dl class="is-flex">
             <dt style="width:25%;">Engine</dt>
-            <dd style="width:75%;">{{ model.engine }}</dd>
+            <dd style="width:75%;">{{ motorbike.engine }}</dd>
           </dl>
 
           <dl class="is-flex">
             <dt style="width:25%;">Displacement</dt>
-            <dd style="width:75%;">{{ model.displacement }}</dd>
+            <dd style="width:75%;">{{ motorbike.displacement }}</dd>
           </dl>
 
           <dl class="is-flex">
             <dt style="width:25%;">Max Power</dt>
-            <dd style="width:75%;">{{ model.max_power }}</dd>
+            <dd style="width:75%;">{{ motorbike.max_power }}</dd>
           </dl>
 
           <dl class="is-flex">
             <dt style="width:25%;">Max Torque</dt>
-            <dd style="width:75%;">{{ model.max_torque }}</dd>
+            <dd style="width:75%;">{{ motorbike.max_torque }}</dd>
           </dl>
 
           <dl class="is-flex">
             <dt style="width:25%;">Fuel Capacity</dt>
-            <dd style="width:75%;">{{ model.fuel_capacity }}</dd>
+            <dd style="width:75%;">{{ motorbike.fuel_capacity }}</dd>
           </dl>
 
           <dl class="is-flex">
             <dt style="width:25%;">Curb Mass</dt>
-            <dd style="width:75%;">{{ model.curb_mass }}</dd>
+            <dd style="width:75%;">{{ motorbike.curb_mass }}</dd>
           </dl>
         </div>
       </div>
 
       <div class="card-footer">
-        <a class="card-footer-item" href="{{ url_for('bikes', manufacturer_slug=model.manufacturer.slug) }}">Back</a>
-        <a class="card-footer-item" href="{{ url_for('edit_model', manufacturer_slug=model.manufacturer.slug, motorbike_slug=model.slug) }}">Edit</a>
+        <a class="card-footer-item" href="{{ url_for('motorbikes', manufacturer_slug=motorbike.manufacturer.slug) }}">Back</a>
+        <a class="card-footer-item" href="{{ url_for('edit_motorbike', manufacturer_slug=motorbike.manufacturer.slug, motorbike_slug=motorbike.slug) }}">Edit</a>
         <a class="card-footer-item" href="#">Delete</a>
       </div>
     </div>

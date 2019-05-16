@@ -21,42 +21,42 @@ session = DBSession()
 @app.route('/')
 def index():
     manufacturers = session.query(Manufacturer).all()
-    latest_models = session.query(Motorbike).order_by(
+    latest_motorbikes = session.query(Motorbike).order_by(
         Motorbike.created_on.desc()).limit(10).all()
     return render_template(
         'home.html',
         manufacturers=manufacturers,
-        models=latest_models
+        motorbikes=latest_motorbikes
     )
 
 
 @app.route('/bikes/<manufacturer_slug>')
-def bikes(manufacturer_slug):
+def motorbikes(manufacturer_slug):
     manufacturers = session.query(Manufacturer).all()
     manufacturer = session.query(Manufacturer).filter_by(
         slug=manufacturer_slug).first()
-    manufacturer_models = session.query(
+    motorbikes = session.query(
         Motorbike.model,
         Motorbike.year,
         Motorbike.slug,
     ).filter_by(manufacturer_id=manufacturer.id).all()
     return render_template(
-        'bikes.html',
+        'motorbikes.html',
         manufacturers=manufacturers,
         manufacturer=manufacturer,
-        models=manufacturer_models,
+        motorbikes=motorbikes,
     )
 
 
 @app.route('/models/<manufacturer_slug>/<motorbike_slug>')
-def model(manufacturer_slug, motorbike_slug):
-    manufacturer_model = session.query(Motorbike).filter_by(
+def motorbike(manufacturer_slug, motorbike_slug):
+    motorbike = session.query(Motorbike).filter_by(
             slug=motorbike_slug).first()
-    return render_template('model.html', model=manufacturer_model)
+    return render_template('motorbike.html', motorbike=motorbike)
 
 
 @app.route('/models/<manufacturer_slug>/new', methods=['GET', 'POST'])
-def new_model(manufacturer_slug):
+def new_motorbike(manufacturer_slug):
     manufacturer = session.query(Manufacturer).filter_by(
         slug=manufacturer_slug).first()
     if request.method == 'POST':
@@ -92,14 +92,14 @@ def new_model(manufacturer_slug):
             session.add(model)
             session.commit()
         return redirect(url_for(
-            'bikes', manufacturer_slug=manufacturer_slug))
-    return render_template('new-model.html', manufacturer=manufacturer)
+            'motorbikes', manufacturer_slug=manufacturer_slug))
+    return render_template('new-motorbike.html', manufacturer=manufacturer)
 
 
 @app.route(
     '/models/<manufacturer_slug>/<motorbike_slug>/edit',
     methods=['GET', 'POST'])
-def edit_model(manufacturer_slug, motorbike_slug):
+def edit_motorbike(manufacturer_slug, motorbike_slug):
     motorbike = session.query(Motorbike).filter_by(
         slug=motorbike_slug).first()
     if request.method == 'POST':
@@ -140,11 +140,11 @@ def edit_model(manufacturer_slug, motorbike_slug):
             motorbike.image = image
         session.commit()
         return redirect(url_for(
-            'model',
+            'motorbike',
             manufacturer_slug=manufacturer_slug,
             motorbike_slug=motorbike.slug,
         ))
-    return render_template('edit-model.html', motorbike=motorbike)
+    return render_template('edit-motorbike.html', motorbike=motorbike)
 
 
 def main():
