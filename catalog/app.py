@@ -68,9 +68,11 @@ def new_model(manufacturer_slug):
         max_torque = request.form['max_torque']
         fuel_capacity = request.form['fuel_capacity']
         curb_mass = request.form['curb_mass']
-        image = request.form.get('image', '/static/img/default-bike.png')
+        image = request.form['image']
         slug = slugify(model + '-' + year)
         manufacturer_id = manufacturer.id
+        if not image:
+            image = '/static/img/default-bike.png'
         if (model and year and engine and displacement and
                 max_power and max_torque and fuel_capacity and
                 curb_mass and image and slug):
@@ -89,8 +91,8 @@ def new_model(manufacturer_slug):
             )
             session.add(model)
             session.commit()
-            return redirect(url_for(
-                'bikes', manufacturer_slug=manufacturer.slug))
+        return redirect(url_for(
+            'bikes', manufacturer_slug=manufacturer_slug))
     return render_template('new-model.html', manufacturer=manufacturer)
 
 
