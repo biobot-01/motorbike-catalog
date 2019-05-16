@@ -151,6 +151,14 @@ def edit_motorbike(manufacturer_slug, motorbike_slug):
     return render_template('edit-motorbike.html', motorbike=motorbike)
 
 
+@app.route(
+    '/models/<manufacturer_slug>/<motorbike_slug>/delete',
+    methods=['POST'])
+def delete_motorbike(manufacturer_slug, motorbike_slug):
+    motorbike = session.query(Motorbike).filter_by(
+        slug=motorbike_slug).first()
+
+
 def main():
     app.secret_key = 'super_secret_key'
     app.debug = True
