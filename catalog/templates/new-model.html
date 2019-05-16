@@ -7,7 +7,7 @@
       <div class="content">
         <h4 class="title is-4 has-text-centered">New {{ manufacturer.name }} Model</h4>
 
-        <form action="{{ url_for('new_model', manufacturer_slug=manufacturer_slug) }}" method="post">
+        <form action="{{ url_for('new_model', manufacturer_slug=manufacturer.slug) }}" method="post">
           <div class="field">
             <label class="label" for="image">Image</label>
 
