@@ -78,7 +78,7 @@ def new_motorbike(manufacturer_slug):
         if (model and year and engine and displacement and
                 max_power and max_torque and fuel_capacity and
                 curb_mass and image and slug):
-            model = Motorbike(
+            motorbike = Motorbike(
                 slug=slug,
                 model=model,
                 year=year,
@@ -91,7 +91,7 @@ def new_motorbike(manufacturer_slug):
                 image=image,
                 manufacturer_id=manufacturer_id,
             )
-            session.add(model)
+            session.add(motorbike)
             session.commit()
         return redirect(url_for(
             'motorbikes', manufacturer_slug=manufacturer_slug))
