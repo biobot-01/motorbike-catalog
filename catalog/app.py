@@ -140,6 +140,7 @@ def edit_motorbike(manufacturer_slug, motorbike_slug):
             motorbike.curb_mass = curb_mass
         if image:
             motorbike.image = image
+        session.add(motorbike)
         session.commit()
         return redirect(url_for(
             'motorbike',
