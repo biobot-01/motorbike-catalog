@@ -20,7 +20,8 @@ session = DBSession()
 
 @app.route('/')
 def index():
-    manufacturers = session.query(Manufacturer).all()
+    manufacturers = session.query(Manufacturer).order_by(
+        Manufacturer.slug).all()
     latest_motorbikes = session.query(Motorbike).order_by(
         Motorbike.created_on.desc()).limit(10).all()
     return render_template(
@@ -32,7 +33,8 @@ def index():
 
 @app.route('/bikes/<manufacturer_slug>')
 def motorbikes(manufacturer_slug):
-    manufacturers = session.query(Manufacturer).all()
+    manufacturers = session.query(Manufacturer).order_by(
+        Manufacturer.slug).all()
     manufacturer = session.query(Manufacturer).filter_by(
         slug=manufacturer_slug).first()
     motorbikes = session.query(
