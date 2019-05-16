@@ -100,9 +100,51 @@ def new_model(manufacturer_slug):
     '/models/<manufacturer_slug>/<motorbike_slug>/edit',
     methods=['GET', 'POST'])
 def edit_model(manufacturer_slug, motorbike_slug):
-    manufacturer_model = session.query(Motorbike).filter_by(
+    motorbike = session.query(Motorbike).filter_by(
         slug=motorbike_slug).first()
-    return render_template('edit-model.html', model=manufacturer_model)
+    if request.method == 'POST':
+        model = request.form['model']
+        year = request.form['year']
+        engine = request.form['engine']
+        displacement = request.form['displacement']
+        max_power = request.form['max_power']
+        max_torque = request.form['max_torque']
+        fuel_capacity = request.form['fuel_capacity']
+        curb_mass = request.form['curb_mass']
+        image = request.form['image']
+        if model:
+            motorbike.model = model
+        if year:
+            motorbike.year = year
+        if model and year:
+            motorbike.slug = slugify(model + '-' + year)
+        elif model and not year:
+            motorbike.slug = slugify(model + '-' + motorbike.year)
+        elif not model and year:
+            motorbike.slug = slugify(motorbike.model + '-' + year)
+        else:
+            motorbike.slug = slugify(motorbike.model + '-' + motorbike.year)
+        if engine:
+            motorbike.engine = engine
+        if displacement:
+            motorbike.displacement = displacement
+        if max_power:
+            motorbike.max_power = max_power
+        if max_torque:
+            motorbike.max_torque = max_torque
+        if fuel_capacity:
+            motorbike.fuel_capacity = fuel_capacity
+        if curb_mass:
+            motorbike.curb_mass = curb_mass
+        if image:
+            motorbike.image = image
+        session.commit()
+        return redirect(url_for(
+            'model',
+            manufacturer_slug=manufacturer_slug,
+            motorbike_slug=motorbike.slug,
+        ))
+    return render_template('edit-model.html', motorbike=motorbike)
 
 
 def main():
