@@ -13,7 +13,7 @@
           <div class="content">
             <a class="button is-primary is-medium" href="{{ url_for('new_motorbike', manufacturer_slug=manufacturer.slug) }}">Add Model</a>
 
-            <h3>{{ manufacturer.name }}</h3>
+            <h3>{{ manufacturer.name }} <span>({{ count }} models)</span></h3>
 
             {% if motorbikes %}
               <ul>
