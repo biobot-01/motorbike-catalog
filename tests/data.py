@@ -384,7 +384,7 @@ def add_manufacturers(list_of_names):
 def add_bikes(list_of_bikes):
     for dic in list_of_bikes:
         bike = Motorbike(
-            slug=slugify(dic['model'] + dic['year']),
+            slug=slugify(dic['model'] + '-' + dic['year']),
             model=dic['model'],
             year=dic['year'],
             engine=dic['engine'],
