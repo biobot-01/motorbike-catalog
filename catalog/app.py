@@ -153,10 +153,19 @@ def edit_motorbike(manufacturer_slug, motorbike_slug):
 
 @app.route(
     '/models/<manufacturer_slug>/<motorbike_slug>/delete',
-    methods=['POST'])
+    methods=['GET', 'POST'])
 def delete_motorbike(manufacturer_slug, motorbike_slug):
     motorbike = session.query(Motorbike).filter_by(
         slug=motorbike_slug).first()
+    if request.method == 'POST':
+        session.delete(motorbike)
+        session.commit()
+        return redirect(url_for(
+            'motorbikes',
+            manufacturer_slug=manufacturer_slug))
+    return render_template(
+        'delete-motorbike.html',
+        motorbike=motorbike)
 
 
 def main():
