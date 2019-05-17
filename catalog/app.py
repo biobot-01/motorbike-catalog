@@ -31,7 +31,7 @@ def index():
     )
 
 
-@app.route('/bikes/<manufacturer_slug>')
+@app.route('/motorbikes/<manufacturer_slug>')
 def motorbikes(manufacturer_slug):
     manufacturers = session.query(Manufacturer).order_by(
         Manufacturer.slug).all()
@@ -51,14 +51,16 @@ def motorbikes(manufacturer_slug):
     )
 
 
-@app.route('/models/<manufacturer_slug>/<motorbike_slug>')
+@app.route('/motorbikes/<manufacturer_slug>/models/<motorbike_slug>')
 def motorbike(manufacturer_slug, motorbike_slug):
     motorbike = session.query(Motorbike).filter_by(
             slug=motorbike_slug).first()
     return render_template('motorbike.html', motorbike=motorbike)
 
 
-@app.route('/models/<manufacturer_slug>/new', methods=['GET', 'POST'])
+@app.route(
+    '/motorbikes/<manufacturer_slug>/models/new',
+    methods=['GET', 'POST'])
 def new_motorbike(manufacturer_slug):
     manufacturer = session.query(Manufacturer).filter_by(
         slug=manufacturer_slug).first()
@@ -100,7 +102,7 @@ def new_motorbike(manufacturer_slug):
 
 
 @app.route(
-    '/models/<manufacturer_slug>/<motorbike_slug>/edit',
+    '/motorbikes/<manufacturer_slug>/models/<motorbike_slug>/edit',
     methods=['GET', 'POST'])
 def edit_motorbike(manufacturer_slug, motorbike_slug):
     motorbike = session.query(Motorbike).filter_by(
@@ -152,7 +154,7 @@ def edit_motorbike(manufacturer_slug, motorbike_slug):
 
 
 @app.route(
-    '/models/<manufacturer_slug>/<motorbike_slug>/delete',
+    '/motorbikes/<manufacturer_slug>/models/<motorbike_slug>/delete',
     methods=['GET', 'POST'])
 def delete_motorbike(manufacturer_slug, motorbike_slug):
     motorbike = session.query(Motorbike).filter_by(
