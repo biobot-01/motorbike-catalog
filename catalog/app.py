@@ -43,11 +43,14 @@ def motorbikes(manufacturer_slug):
         Motorbike.slug,
     ).filter_by(manufacturer_id=manufacturer.id).order_by(
         Motorbike.slug, Motorbike.year).all()
+    count = session.query(Motorbike).filter_by(
+        manufacturer_id=manufacturer.id).count()
     return render_template(
         'motorbikes.html',
         manufacturers=manufacturers,
         manufacturer=manufacturer,
         motorbikes=motorbikes,
+        count=count,
     )
 
 
