@@ -53,6 +53,14 @@ def create_user(login_session):
     return user.id
 
 
+def get_user_id(email):
+    try:
+        user = session.query(User).filter_by(email=email).one()
+        return user.id
+    except Exception:
+        return None
+
+
 @app.route('/oauth/<provider>')
 def oauth(provider):
     state = login_session['state']
