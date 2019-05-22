@@ -1,9 +1,15 @@
 #!/usr/bin/env python3
 
-from flask import Flask, render_template, request, redirect, url_for
+import json
+import os
+from secrets import token_urlsafe
+
+from flask import (Flask, render_template, request, redirect, url_for,
+                   session as login_session, make_response)
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from slugify import slugify
+from requests_oauthlib import OAuth2Session
 
 from models import Base, Manufacturer, Motorbike
 # Create flask instance
@@ -17,9 +23,73 @@ DBSession = sessionmaker(bind=engine)
 # Create a session for the database
 session = DBSession()
 
+google_secrets_file = 'google_secrets.json'
+with open(google_secrets_file) as f:
+    google_secrets = json.load(f)
+
+g_client_id = google_secrets['web']['client_id']
+g_client_secret = google_secrets['web']['client_secret']
+g_auth_uri = google_secrets['web']['auth_uri']
+g_token_uri = google_secrets['web']['token_uri']
+g_redirect_uri = google_secrets['web']['redirect_uris'][1]
+
+scope = [
+    'https://www.googleapis.com/auth/userinfo.email',
+    'https://www.googleapis.com/auth/userinfo.profile',
+]
+
+
+@app.route('/oauth/<provider>')
+def oauth(provider):
+    state = login_session['state']
+    if provider == 'google':
+        if request.args.get('state') != state:
+            response = make_response(
+                json.dumps('Invalid state parameter.'),
+                401,
+            )
+            response.headers['Content-type'] = 'application/json'
+            return response
+        google = OAuth2Session(
+            client_id=g_client_id,
+            redirect_uri=g_redirect_uri,
+            scope=scope,
+            state=state,
+        )
+        auth_url, state = google.authorization_url(
+            g_auth_uri,
+            state=state,
+            access_type='offline',
+            prompt='consent',
+        )
+        return redirect(auth_url)
+
+
+@app.route('/oauth2callback')
+def oauth2callback():
+    state = login_session['state']
+    google = OAuth2Session(
+        client_id=g_client_id,
+        redirect_uri=g_redirect_uri,
+        scope=scope,
+        state=state,
+    )
+    auth_resp = request.url
+    google.fetch_token(
+        g_token_uri,
+        authorization_response=auth_resp,
+        client_secret=g_client_secret,
+    )
+    resp = google.get('https://www.googleapis.com/userinfo/v2/me')
+    data = resp.json()
+    return json.dumps(data)
+    return redirect(url_for('index'))
+
 
 @app.route('/')
 def index():
+    state = token_urlsafe(32)
+    login_session['state'] = state
     manufacturers = session.query(Manufacturer).order_by(
         Manufacturer.slug).all()
     latest_motorbikes = session.query(Motorbike).order_by(
@@ -27,7 +97,9 @@ def index():
     return render_template(
         'home.html',
         manufacturers=manufacturers,
-        motorbikes=latest_motorbikes
+        motorbikes=latest_motorbikes,
+        STATE=state,
+        CLIENT_ID=g_client_id,
     )
 
 
@@ -174,6 +246,7 @@ def delete_motorbike(manufacturer_slug, motorbike_slug):
 
 
 def main():
+    os.environ['OAUTHLIB_INSECURE_TRANSPORT'] = '1'
     app.secret_key = 'super_secret_key'
     app.debug = True
     app.run(host='127.0.0.1', port=8000, threaded=False)
