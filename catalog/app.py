@@ -111,6 +111,32 @@ def oauth2callback():
         )
         response.headers['Content-type'] = 'application/json'
         return response
+    stored_access_token = login_session.get('access_token')
+    stored_google_id = login_session.get('google_id')
+    if stored_access_token is not None and data['id'] == stored_google_id:
+        response = make_response(
+            json.dumps('Current user is already connected'),
+            200,
+        )
+        response.headers['Content-type'] = 'application/json'
+        return response
+    login_session['access_token'] = access_token
+    login_session['google_id'] = google_id
+    userinfo_url = 'https://www.googleapis.com/userinfo/v2/me'
+    params = {
+        'access_token': access_token,
+        'alt': 'json',
+    }
+    user_request = requests.get(userinfo_url, params=params)
+    user_data = user_request.json()
+    login_session['provider'] = 'google'
+    login_session['name'] = user_data['name']
+    login_session['picture'] = user_data['picture']
+    login_session['email'] = user_data['email']
+    user_id = get_user_id(login_session['email'])
+    if not user_id:
+        user_id = create_user(login_session)
+    login_session['user_id'] = user_id
     return redirect(url_for('index'))
 
 
