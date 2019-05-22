@@ -161,6 +161,18 @@ def oauth2callback():
     return redirect(url_for('index'))
 
 
+@app.route('/logout')
+def logout():
+    access_token = login_session.get('access_token')
+    if access_token is None:
+        response = make_response(
+            json.dumps('Current user not connected'),
+            401,
+        )
+        response.headers['Content-type'] = 'application/json'
+        return response
+
+
 @app.route('/')
 def index():
     state = token_urlsafe(32)
