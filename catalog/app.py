@@ -12,7 +12,7 @@ from slugify import slugify
 from requests_oauthlib import OAuth2Session
 import requests
 
-from models import Base, Manufacturer, Motorbike
+from models import Base, User, Manufacturer, Motorbike
 # Create flask instance
 app = Flask(__name__)
 # Connect to database
@@ -38,6 +38,19 @@ scope = [
     'https://www.googleapis.com/auth/userinfo.email',
     'https://www.googleapis.com/auth/userinfo.profile',
 ]
+
+
+def create_user(login_session):
+    user = User(
+        name=login_session['name'],
+        email=login_session['email'],
+        picture=login_session['picture'],
+    )
+    session.add(user)
+    session.commit()
+    user = session.query(User).filter_by(
+        email=login_session['email']).first()
+    return user.id
 
 
 @app.route('/oauth/<provider>')
