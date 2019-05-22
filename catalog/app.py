@@ -10,6 +10,7 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from slugify import slugify
 from requests_oauthlib import OAuth2Session
+import requests
 
 from models import Base, Manufacturer, Motorbike
 # Create flask instance
@@ -75,14 +76,41 @@ def oauth2callback():
         state=state,
     )
     auth_resp = request.url
-    google.fetch_token(
+    token = google.fetch_token(
         g_token_uri,
         authorization_response=auth_resp,
         client_secret=g_client_secret,
     )
+    access_token = token['access_token']
+    auth_url = 'https://www.googleapis.com/oauth2/v1/tokeninfo'
+    params = {'access_token': access_token}
+    result = requests.get(auth_url, params=params)
+    data = result.json()
+    if data.get('error') is not None:
+        response = make_response(
+            json.dumps(data['error']),
+            500,
+        )
+        response.headers['Content-type'] = 'application/json'
+        return response
+    google_id = data['user_id']
+    google_issued = data['issued_to']
     resp = google.get('https://www.googleapis.com/userinfo/v2/me')
     data = resp.json()
-    return json.dumps(data)
+    if data['id'] != google_id:
+        response = make_response(
+            json.dumps("Token's user ID doesn't match given user ID"),
+            401,
+        )
+        response.headers['Content-type'] = 'application/json'
+        return response
+    if g_client_id != google_issued:
+        response = make_response(
+            json.dumps("Token's client ID doesn't match app's ID"),
+            401,
+        )
+        response.headers['Content-type'] = 'application/json'
+        return response
     return redirect(url_for('index'))
 
 
