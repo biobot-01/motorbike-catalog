@@ -14,8 +14,8 @@ class User(Base):
     __tablename__ = 'users'
 
     id = Column(Integer, primary_key=True)
+    email = Column(String(250), index=True, nullable=False)
     name = Column(String(70), nullable=False)
-    email = Column(String(250), nullable=False)
     picture = Column(String, nullable=False)
 
 
