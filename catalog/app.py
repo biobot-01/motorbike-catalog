@@ -9,7 +9,7 @@ from flask import (Flask, render_template, request, redirect, url_for,
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from slugify import slugify
-from requests_oauthlib import OAuth2Session
+from google_auth_oauthlib.flow import Flow
 import requests
 
 from models import Base, User, Manufacturer, Motorbike
@@ -34,7 +34,7 @@ g_auth_uri = google_secrets['web']['auth_uri']
 g_token_uri = google_secrets['web']['token_uri']
 g_redirect_uri = google_secrets['web']['redirect_uris'][1]
 
-scope = [
+scopes = [
     'https://www.googleapis.com/auth/userinfo.email',
     'https://www.googleapis.com/auth/userinfo.profile',
 ]
@@ -72,14 +72,13 @@ def oauth(provider):
             )
             response.headers['Content-type'] = 'application/json'
             return response
-        google = OAuth2Session(
-            client_id=g_client_id,
-            redirect_uri=g_redirect_uri,
-            scope=scope,
+        flow = Flow.from_client_secrets_file(
+            google_secrets_file,
+            scopes=scopes,
             state=state,
         )
-        auth_url, state = google.authorization_url(
-            g_auth_uri,
+        flow.redirect_uri = g_redirect_uri
+        auth_url, state = flow.authorization_url(
             state=state,
             access_type='offline',
             prompt='consent',
@@ -90,20 +89,32 @@ def oauth(provider):
 @app.route('/oauth2callback')
 def oauth2callback():
     state = login_session['state']
-    google = OAuth2Session(
-        client_id=g_client_id,
-        redirect_uri=g_redirect_uri,
-        scope=scope,
+    if request.args.get('error'):
+        response = make_response(
+            json.dumps(request.args.get('error') + ': You did not '
+                       'approve the access request'),
+            401,
+        )
+    flow = Flow.from_client_secrets_file(
+        google_secrets_file,
+        scopes=scopes,
         state=state,
     )
+    flow.redirect_uri = g_redirect_uri
     auth_resp = request.url
-    token = google.fetch_token(
-        g_token_uri,
-        authorization_response=auth_resp,
-        client_secret=g_client_secret,
-    )
-    access_token = token['access_token']
-    auth_url = 'https://www.googleapis.com/oauth2/v1/tokeninfo'
+    flow.fetch_token(authorization_response=auth_resp)
+    credentials = flow.credentials
+    credentials_info = {
+        'token': credentials.token,
+        'refresh_token': credentials.refresh_token,
+        'id_token': credentials.refresh_token,
+        'token_uri': credentials.token_uri,
+        'client_id': credentials.client_id,
+        'client_secret': credentials.client_secret,
+        'scopes': credentials.scopes,
+    }
+    access_token = credentials.token
+    auth_url = 'https://www.googleapis.com/oauth2/v2/tokeninfo'
     params = {'access_token': access_token}
     result = requests.get(auth_url, params=params)
     data = result.json()
@@ -114,17 +125,7 @@ def oauth2callback():
         )
         response.headers['Content-type'] = 'application/json'
         return response
-    google_id = data['user_id']
     google_issued = data['issued_to']
-    resp = google.get('https://www.googleapis.com/userinfo/v2/me')
-    data = resp.json()
-    if data['id'] != google_id:
-        response = make_response(
-            json.dumps("Token's user ID doesn't match given user ID"),
-            401,
-        )
-        response.headers['Content-type'] = 'application/json'
-        return response
     if g_client_id != google_issued:
         response = make_response(
             json.dumps("Token's client ID doesn't match app's ID"),
@@ -132,16 +133,17 @@ def oauth2callback():
         )
         response.headers['Content-type'] = 'application/json'
         return response
-    stored_access_token = login_session.get('access_token')
+    google_id = data['user_id']
+    stored_credentials = login_session.get('credentials')
     stored_google_id = login_session.get('google_id')
-    if stored_access_token is not None and data['id'] == stored_google_id:
+    if stored_credentials is not None and google_id == stored_google_id:
         response = make_response(
             json.dumps('Current user is already connected'),
             200,
         )
         response.headers['Content-type'] = 'application/json'
         return response
-    login_session['access_token'] = access_token
+    login_session['credentials'] = credentials_info
     login_session['google_id'] = google_id
     userinfo_url = 'https://www.googleapis.com/userinfo/v2/me'
     params = {
@@ -150,6 +152,13 @@ def oauth2callback():
     }
     user_request = requests.get(userinfo_url, params=params)
     user_data = user_request.json()
+    if user_data['id'] != google_id:
+        response = make_response(
+            json.dumps("Token's user ID doesn't match given user ID"),
+            401,
+        )
+        response.headers['Content-type'] = 'application/json'
+        return response
     login_session['provider'] = 'google'
     login_session['name'] = user_data['name']
     login_session['picture'] = user_data['picture']
