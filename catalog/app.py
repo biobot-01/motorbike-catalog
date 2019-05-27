@@ -10,6 +10,7 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from slugify import slugify
 from google_auth_oauthlib.flow import Flow
+from google.oauth2.credentials import Credentials
 import requests
 
 from models import Base, User, Manufacturer, Motorbike
@@ -172,11 +173,38 @@ def oauth2callback():
 
 @app.route('/logout')
 def logout():
-    access_token = login_session.get('access_token')
-    if access_token is None:
+    if 'credentials' not in login_session:
         response = make_response(
             json.dumps('Current user not connected'),
             401,
+        )
+        response.headers['Content-type'] = 'application/json'
+        return response
+    credentials = Credentials(**login_session['credentials'])
+    access_token = credentials.token
+    revoke_url = 'https://accounts.google.com/o/oauth2/revoke'
+    params = {'token': access_token}
+    headers = {'Content-type': 'application/x-www-form-urlencoded'}
+    revoke_request = requests.post(revoke_url, params=params, headers=headers)
+    status_code = revoke_request.status_code
+    if status_code == 200:
+        del login_session['credentials']
+        del login_session['google_id']
+        del login_session['name']
+        del login_session['picture']
+        del login_session['email']
+        del login_session['provider']
+        del login_session['user_id']
+        response = make_response(
+            json.dumps('Successfully disconnected'),
+            200,
+        )
+        response.headers['Content-type'] = 'application/json'
+        return response
+    else:
+        response = make_response(
+            json.dumps('Failed to revoke token for given user'),
+            400,
         )
         response.headers['Content-type'] = 'application/json'
         return response
