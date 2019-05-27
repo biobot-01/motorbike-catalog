@@ -44,6 +44,8 @@ class Motorbike(Base):
     created_on = Column(DateTime, default=datetime.now())
     manufacturer_id = Column(Integer, ForeignKey('manufacturers.id'))
     manufacturer = relationship(Manufacturer)
+    user_id = Column(Integer, ForeignKey('users.id'))
+    user = relationship(User)
 
 
 engine = create_engine('sqlite:///motorbike_catalog.db')
