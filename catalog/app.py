@@ -65,14 +65,14 @@ def get_user_id(email):
 @app.route('/oauth/<provider>')
 def oauth(provider):
     state = login_session['state']
+    if request.args.get('state') != state:
+        response = make_response(
+            json.dumps('Invalid state parameter.'),
+            401,
+        )
+        response.headers['Content-type'] = 'application/json'
+        return response
     if provider == 'google':
-        if request.args.get('state') != state:
-            response = make_response(
-                json.dumps('Invalid state parameter.'),
-                401,
-            )
-            response.headers['Content-type'] = 'application/json'
-            return response
         flow = Flow.from_client_secrets_file(
             google_secrets_file,
             scopes=scopes,
