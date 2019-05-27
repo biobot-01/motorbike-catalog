@@ -275,6 +275,7 @@ def new_motorbike(manufacturer_slug):
         image = request.form['image']
         slug = slugify(model + '-' + year)
         manufacturer_id = manufacturer.id
+        user_id = login_session['user_id']
         if not image:
             image = '/static/img/default-bike.png'
         if (model and year and engine and displacement and
@@ -292,6 +293,7 @@ def new_motorbike(manufacturer_slug):
                 max_torque=max_torque,
                 image=image,
                 manufacturer_id=manufacturer_id,
+                user_id=user_id,
             )
             session.add(motorbike)
             session.commit()
