@@ -16,6 +16,19 @@ DBSession = sessionmaker(bind=engine)
 # Create a session for the database
 session = DBSession()
 
+users = [
+    {
+        'email': 'kevingsx@gmail.com',
+        'name': 'Kevin Michael',
+        'picture': '/static/img/default-user.png',
+    },
+    {
+        'email': 'some_name@example.com',
+        'name': 'John Doe',
+        'picture': '/static/img/default-user.png',
+    },
+]
+
 manufacturers = [
     'Aprilia',
     'BMW',
@@ -45,6 +58,7 @@ bikes = [
         'image': ('https://motorcyclespecs.co.za/Gallery_A-L_16/'
                   'Aprilia-Tuono-V4-Fac-19-04.jpg'),
         'manufacturer_id': 1,
+        'user_id': 1,
     },
     {
         'model': 'Shiver 900',
@@ -60,6 +74,7 @@ bikes = [
         'image': ('https://motorcyclespecs.co.za/Gallery_A-L_16/'
                   'Aprilia-Shiver-900-19-02.jpg'),
         'manufacturer_id': 1,
+        'user_id': 2,
     },
     {
         'model': 'S1000R',
@@ -74,6 +89,7 @@ bikes = [
         'image': ('https://motorcyclespecs.co.za/Gallery_A-L_16/'
                   'bmw_s1000_r_rr_xr_17_03.jpg'),
         'manufacturer_id': 2,
+        'user_id': 1,
     },
     {
         'model': 'R nineT Pure',
@@ -89,6 +105,7 @@ bikes = [
         'image': ('https://motorcyclespecs.co.za/Gallery_A-L_16/'
                   'BMW_RnineT_pure_1-19.jpg'),
         'manufacturer_id': 2,
+        'user_id': 2,
     },
     {
         'model': 'Hypermotard 950 SP',
@@ -104,6 +121,7 @@ bikes = [
         'image': ('https://motorcyclespecs.co.za/Gallery_A-L_16/'
                   'Ducati-Hypermotard-950-SP-01.jpg'),
         'manufacturer_id': 3,
+        'user_id': 1,
     },
     {
         'model': 'Monster 821',
@@ -118,6 +136,7 @@ bikes = [
         'image': ('https://motorcyclespecs.co.za/Gallery_A-L_16/'
                   'ducati_monster_821-05.jpg'),
         'manufacturer_id': 3,
+        'user_id': 2,
     },
     {
         'model': 'Street 750',
@@ -132,6 +151,7 @@ bikes = [
         'image': ('https://motorcyclespecs.co.za/Gallery_A-L_16/'
                   'Harley-Street-750-18-02.jpg'),
         'manufacturer_id': 4,
+        'user_id': 1,
     },
     {
         'model': 'Street Rod',
@@ -146,6 +166,7 @@ bikes = [
         'image': ('https://motorcyclespecs.co.za/Gallery_A-L_16/'
                   'Harley-Street-Rod-19-01.jpg'),
         'manufacturer_id': 4,
+        'user_id': 2,
     },
     {
         'model': 'CB1000R',
@@ -160,6 +181,7 @@ bikes = [
         'image': ('https://motorcyclespecs.co.za/Gallery_A-L_16/'
                   'Honda-CB1000R-19-01.jpg'),
         'manufacturer_id': 5,
+        'user_id': 1,
     },
     {
         'model': 'CB650F',
@@ -174,6 +196,7 @@ bikes = [
         'image': ('https://motorcyclespecs.co.za/Gallery_A-L_16/'
                   'honda_cb650f_17_02.jpg'),
         'manufacturer_id': 5,
+        'user_id': 2,
     },
     {
         'model': 'Z900',
@@ -188,6 +211,7 @@ bikes = [
         'image': ('https://motorcyclespecs.co.za/Gallery_A-L_16/'
                   'Kawasaki-Z900-19-02.jpg'),
         'manufacturer_id': 6,
+        'user_id': 1,
     },
     {
         'model': 'Z650',
@@ -202,6 +226,7 @@ bikes = [
         'image': ('https://motorcyclespecs.co.za/Gallery_A-L_16/'
                   'Kawasaki%20Z650_17_1.jpg'),
         'manufacturer_id': 6,
+        'user_id': 2,
     },
     {
         'model': '790 Duke "The Scalpel"',
@@ -216,6 +241,7 @@ bikes = [
         'image': ('https://motorcyclespecs.co.za/Gallery_A-L_16/'
                   'KTM%20790%20Duke_18_01.jpg'),
         'manufacturer_id': 7,
+        'user_id': 1,
     },
     {
         'model': '690 SMC R "Street Slayer"',
@@ -230,6 +256,7 @@ bikes = [
         'image': ('https://motorcyclespecs.co.za/Gallery_A-L_16/'
                   'KTM-690-SMC-R-19-04.jpg'),
         'manufacturer_id': 7,
+        'user_id': 2,
     },
     {
         'model': 'Brutale 800 RC',
@@ -244,6 +271,7 @@ bikes = [
         'image': ('https://motorcyclespecs.co.za/Gallery_M-Z_16/'
                   'MV-Agusta-Brutale-800-RC-03.jpg'),
         'manufacturer_id': 8,
+        'user_id': 1,
     },
     {
         'model': 'Dragster 800 RC',
@@ -258,6 +286,7 @@ bikes = [
         'image': ('https://motorcyclespecs.co.za/Gallery_M-Z_16/'
                   'MV%20Agusta%20Dragster%20800RC_18_03.jpg'),
         'manufacturer_id': 8,
+        'user_id': 2,
     },
     {
         'model': 'Interceptor',
@@ -272,6 +301,7 @@ bikes = [
         'image': ('https://motorcyclespecs.co.za/Gallery_M-Z_16/'
                   'Royal%20Enfield%20Interceptor_04.jpg'),
         'manufacturer_id': 9,
+        'user_id': 1,
     },
     {
         'model': 'Continental GT',
@@ -286,6 +316,7 @@ bikes = [
         'image': ('https://motorcyclespecs.co.za/Gallery_M-Z_16/'
                   'Royal%20Enfield%20Continental%20GT%2005.jpg'),
         'manufacturer_id': 9,
+        'user_id': 2,
     },
     {
         'model': 'GSX-S750',
@@ -300,6 +331,7 @@ bikes = [
         'image': ('https://motorcyclespecs.co.za/Gallery_M-Z_16/'
                   'Suzuki-GSX-S750-19-02.jpg'),
         'manufacturer_id': 10,
+        'user_id': 1,
     },
     {
         'model': 'DR-Z400SM',
@@ -314,6 +346,7 @@ bikes = [
         'image': ('https://motorcyclespecs.co.za/Gallery_M-Z_16/'
                   'Suzuki-DR-Z400SM-19-04.jpg'),
         'manufacturer_id': 10,
+        'user_id': 2,
     },
     {
         'model': 'Street Triple RS',
@@ -328,6 +361,7 @@ bikes = [
         'image': ('https://motorcyclespecs.co.za/Gallery_M-Z_16/'
                   'Triumph%20Street%20Triple%20765RS_7.jpg'),
         'manufacturer_id': 11,
+        'user_id': 1,
     },
     {
         'model': 'Street Twin',
@@ -342,6 +376,7 @@ bikes = [
         'image': ('https://motorcyclespecs.co.za/Gallery_M-Z_16/'
                   'Triumph_Street_twin_16_03.jpg'),
         'manufacturer_id': 11,
+        'user_id': 2,
     },
     {
         'model': 'MT-09',
@@ -356,6 +391,7 @@ bikes = [
         'image': ('https://motorcyclespecs.co.za/Gallery_M-Z_16/'
                   'Yamaha%20MT-09_18_03.jpg'),
         'manufacturer_id': 12,
+        'user_id': 1,
     },
     {
         'model': 'XSR900',
@@ -370,8 +406,20 @@ bikes = [
         'image': ('https://motorcyclespecs.co.za/Gallery_M-Z_16/'
                   'Yamaha%20XSR%20900_18_04.jpg'),
         'manufacturer_id': 12,
+        'user_id': 2,
     }
 ]
+
+
+def add_users(list_of_users):
+    for dic in list_of_users:
+        user = User(
+            email=dic['email'],
+            name=dic['name'],
+            picture=dic['picture'],
+        )
+        session.add(user)
+    session.commit()
 
 
 def add_manufacturers(list_of_names):
@@ -402,6 +450,7 @@ def add_bikes(list_of_bikes):
 
 def main():
     print('Adding data to database...')
+    add_users(users)
     add_manufacturers(manufacturers)
     add_bikes(bikes)
     print('Successfully added all data!')
