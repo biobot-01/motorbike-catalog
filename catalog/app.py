@@ -11,6 +11,7 @@ from sqlalchemy.orm import sessionmaker
 from slugify import slugify
 from google_auth_oauthlib.flow import Flow
 from google.oauth2.credentials import Credentials
+from requests_oauthlib import OAuth2Session
 import requests
 
 from models import Base, User, Manufacturer, Motorbike
@@ -99,6 +100,17 @@ def oauth(provider):
             state=state,
             access_type='offline',
             prompt='consent',
+        )
+        return redirect(auth_url)
+    if provider == 'github':
+        github_flow = OAuth2Session(
+            client_id=github_client_id,
+            redirect_uri=github_redirect_uri,
+            state=state,
+        )
+        auth_url, state = github_flow.authorization_url(
+            github_auth_uri,
+            state=state,
         )
         return redirect(auth_url)
 
