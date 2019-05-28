@@ -29,13 +29,9 @@ google_secrets_file = 'google_secrets.json'
 with open(google_secrets_file) as f:
     google_secrets = json.load(f)
 
-g_client_id = google_secrets['web']['client_id']
-g_client_secret = google_secrets['web']['client_secret']
-g_auth_uri = google_secrets['web']['auth_uri']
-g_token_uri = google_secrets['web']['token_uri']
-g_redirect_uri = google_secrets['web']['redirect_uris'][1]
-
-scopes = [
+google_client_id = google_secrets['web']['client_id']
+google_redirect_uri = google_secrets['web']['redirect_uris'][1]
+google_scopes = [
     'https://www.googleapis.com/auth/userinfo.email',
     'https://www.googleapis.com/auth/userinfo.profile',
 ]
@@ -73,13 +69,13 @@ def oauth(provider):
         response.headers['Content-type'] = 'application/json'
         return response
     if provider == 'google':
-        flow = Flow.from_client_secrets_file(
+        google_flow = Flow.from_client_secrets_file(
             google_secrets_file,
-            scopes=scopes,
+            scopes=google_scopes,
             state=state,
         )
-        flow.redirect_uri = g_redirect_uri
-        auth_url, state = flow.authorization_url(
+        google_flow.redirect_uri = google_redirect_uri
+        auth_url, state = google_flow.authorization_url(
             state=state,
             access_type='offline',
             prompt='consent',
@@ -96,15 +92,15 @@ def oauth2callback():
                        'approve the access request'),
             401,
         )
-    flow = Flow.from_client_secrets_file(
+    google_flow = Flow.from_client_secrets_file(
         google_secrets_file,
-        scopes=scopes,
+        scopes=google_scopes,
         state=state,
     )
-    flow.redirect_uri = g_redirect_uri
+    google_flow.redirect_uri = google_redirect_uri
     auth_resp = request.url
-    flow.fetch_token(authorization_response=auth_resp)
-    credentials = flow.credentials
+    google_flow.fetch_token(authorization_response=auth_resp)
+    credentials = google_flow.credentials
     credentials_info = {
         'token': credentials.token,
         'refresh_token': credentials.refresh_token,
@@ -127,7 +123,7 @@ def oauth2callback():
         response.headers['Content-type'] = 'application/json'
         return response
     google_issued = data['issued_to']
-    if g_client_id != google_issued:
+    if google_client_id != google_issued:
         response = make_response(
             json.dumps("Token's client ID doesn't match app's ID"),
             401,
@@ -223,7 +219,7 @@ def index():
         manufacturers=manufacturers,
         motorbikes=latest_motorbikes,
         STATE=state,
-        CLIENT_ID=g_client_id,
+        CLIENT_ID=google_client_id,
     )
 
 
