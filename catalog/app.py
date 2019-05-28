@@ -58,6 +58,18 @@ def get_user_id(email):
         return None
 
 
+def credentials_to_dict(credentials):
+    return {
+        'token': credentials.token,
+        'refresh_token': credentials.refresh_token,
+        'id_token': credentials.refresh_token,
+        'token_uri': credentials.token_uri,
+        'client_id': credentials.client_id,
+        'client_secret': credentials.client_secret,
+        'scopes': credentials.scopes,
+    }
+
+
 @app.route('/oauth/<provider>')
 def oauth(provider):
     state = login_session['state']
@@ -101,15 +113,7 @@ def oauth2callback():
     auth_resp = request.url
     google_flow.fetch_token(authorization_response=auth_resp)
     credentials = google_flow.credentials
-    credentials_info = {
-        'token': credentials.token,
-        'refresh_token': credentials.refresh_token,
-        'id_token': credentials.refresh_token,
-        'token_uri': credentials.token_uri,
-        'client_id': credentials.client_id,
-        'client_secret': credentials.client_secret,
-        'scopes': credentials.scopes,
-    }
+    credentials_info = credentials_to_dict(credentials)
     access_token = credentials.token
     auth_url = 'https://www.googleapis.com/oauth2/v2/tokeninfo'
     params = {'access_token': access_token}
