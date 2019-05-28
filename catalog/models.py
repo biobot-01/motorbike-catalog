@@ -50,3 +50,11 @@ class Motorbike(Base):
 
 engine = create_engine('sqlite:///motorbike_catalog.db')
 Base.metadata.create_all(engine)
+
+
+def main():
+    print('Created database motorbike_catalog.db')
+
+
+if __name__ == '__main__':
+    main()

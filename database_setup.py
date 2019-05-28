@@ -454,3 +454,7 @@ def main():
     add_manufacturers(manufacturers)
     add_bikes(bikes)
     print('Successfully added all data!')
+
+
+if __name__ == '__main__':
+    main()
