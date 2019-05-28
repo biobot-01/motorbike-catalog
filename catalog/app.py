@@ -26,8 +26,11 @@ DBSession = sessionmaker(bind=engine)
 session = DBSession()
 
 google_secrets_file = 'google_secrets.json'
+github_secrets_file = 'github_secrets.json'
 with open(google_secrets_file) as f:
     google_secrets = json.load(f)
+with open(github_secrets_file) as f:
+    github_secrets = json.load(f)
 
 google_client_id = google_secrets['web']['client_id']
 google_redirect_uri = google_secrets['web']['redirect_uris'][1]
@@ -35,6 +38,11 @@ google_scopes = [
     'https://www.googleapis.com/auth/userinfo.email',
     'https://www.googleapis.com/auth/userinfo.profile',
 ]
+github_client_id = github_secrets['web']['client_id']
+github_client_secret = github_secrets['web']['client_secret']
+github_auth_uri = github_secrets['web']['auth_uri']
+github_token_uri = github_secrets['web']['token_uri']
+github_redirect_uri = github_secrets['web']['redirect_uri']
 
 
 def create_user(login_session):
