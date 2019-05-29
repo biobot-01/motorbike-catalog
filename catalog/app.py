@@ -47,6 +47,22 @@ github_redirect_uri = github_secrets['web']['redirect_uri']
 github_scopes = ['read:user', 'user:email']
 
 
+def oauth_google(state):
+    google_flow = Flow.from_client_secrets_file(
+        google_secrets_file,
+        scopes=google_scopes,
+        state=state,
+    )
+    google_flow.redirect_uri = google_redirect_uri
+    auth_url, state = google_flow.authorization_url(
+        state=state,
+        access_type='offline',
+        include_granted_scopes='true',
+        prompt='consent',
+    )
+    return redirect(auth_url)
+
+
 def create_user(login_session):
     user = User(
         name=login_session['name'],
@@ -91,19 +107,7 @@ def oauth(provider):
         response.headers['Content-type'] = 'application/json'
         return response
     if provider == 'google':
-        google_flow = Flow.from_client_secrets_file(
-            google_secrets_file,
-            scopes=google_scopes,
-            state=state,
-        )
-        google_flow.redirect_uri = google_redirect_uri
-        auth_url, state = google_flow.authorization_url(
-            state=state,
-            access_type='offline',
-            include_granted_scopes='true',
-            prompt='consent',
-        )
-        return redirect(auth_url)
+        oauth_google(state)
     if provider == 'github':
         github_flow = OAuth2Session(
             client_id=github_client_id,
