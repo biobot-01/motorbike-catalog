@@ -44,6 +44,7 @@ github_client_secret = github_secrets['web']['client_secret']
 github_auth_uri = github_secrets['web']['auth_uri']
 github_token_uri = github_secrets['web']['token_uri']
 github_redirect_uri = github_secrets['web']['redirect_uri']
+github_scopes = ['read:user', 'user:email']
 
 
 def create_user(login_session):
@@ -99,12 +100,14 @@ def oauth(provider):
         auth_url, state = google_flow.authorization_url(
             state=state,
             access_type='offline',
+            include_granted_scopes='true',
             prompt='consent',
         )
         return redirect(auth_url)
     if provider == 'github':
         github_flow = OAuth2Session(
             client_id=github_client_id,
+            scope=github_scopes,
             redirect_uri=github_redirect_uri,
             state=state,
         )
@@ -115,8 +118,8 @@ def oauth(provider):
         return redirect(auth_url)
 
 
-@app.route('/oauth2callback')
-def oauth2callback():
+@app.route('/<provider>/callback')
+def oauth_callback(provider):
     state = login_session['state']
     if request.args.get('error'):
         response = make_response(
@@ -124,71 +127,118 @@ def oauth2callback():
                        'approve the access request'),
             401,
         )
-    google_flow = Flow.from_client_secrets_file(
-        google_secrets_file,
-        scopes=google_scopes,
-        state=state,
-    )
-    google_flow.redirect_uri = google_redirect_uri
-    auth_resp = request.url
-    google_flow.fetch_token(authorization_response=auth_resp)
-    credentials = google_flow.credentials
-    credentials_info = credentials_to_dict(credentials)
-    access_token = credentials.token
-    auth_url = 'https://www.googleapis.com/oauth2/v2/tokeninfo'
-    params = {'access_token': access_token}
-    result = requests.get(auth_url, params=params)
-    data = result.json()
-    if data.get('error') is not None:
-        response = make_response(
-            json.dumps(data['error']),
-            500,
+    if provider == 'google':
+        google_flow = Flow.from_client_secrets_file(
+            google_secrets_file,
+            scopes=google_scopes,
+            state=state,
         )
-        response.headers['Content-type'] = 'application/json'
-        return response
-    google_issued = data['issued_to']
-    if google_client_id != google_issued:
-        response = make_response(
-            json.dumps("Token's client ID doesn't match app's ID"),
-            401,
+        google_flow.redirect_uri = google_redirect_uri
+        auth_resp = request.url
+        google_flow.fetch_token(authorization_response=auth_resp)
+        credentials = google_flow.credentials
+        credentials_info = credentials_to_dict(credentials)
+        access_token = credentials.token
+        auth_url = 'https://www.googleapis.com/oauth2/v2/tokeninfo'
+        params = {'access_token': access_token}
+        result = requests.get(auth_url, params=params)
+        data = result.json()
+        if data.get('error') is not None:
+            response = make_response(
+                json.dumps(data['error']),
+                500,
+            )
+            response.headers['Content-type'] = 'application/json'
+            return response
+        google_issued = data['issued_to']
+        if google_client_id != google_issued:
+            response = make_response(
+                json.dumps("Token's client ID doesn't match app's ID"),
+                401,
+            )
+            response.headers['Content-type'] = 'application/json'
+            return response
+        google_id = data['user_id']
+        stored_credentials = login_session.get('credentials')
+        stored_google_id = login_session.get('google_id')
+        if stored_credentials is not None and google_id == stored_google_id:
+            response = make_response(
+                json.dumps('Current user is already connected'),
+                200,
+            )
+            response.headers['Content-type'] = 'application/json'
+            return response
+        login_session['credentials'] = credentials_info
+        login_session['google_id'] = google_id
+        userinfo_url = 'https://www.googleapis.com/userinfo/v2/me'
+        params = {
+            'access_token': access_token,
+            'alt': 'json',
+        }
+        user_request = requests.get(userinfo_url, params=params)
+        user_data = user_request.json()
+        if user_data['id'] != google_id:
+            response = make_response(
+                json.dumps("Token's user ID doesn't match given user ID"),
+                401,
+            )
+            response.headers['Content-type'] = 'application/json'
+            return response
+        login_session['provider'] = 'google'
+        login_session['name'] = user_data['name']
+        login_session['picture'] = user_data['picture']
+        login_session['email'] = user_data['email']
+        user_id = get_user_id(login_session['email'])
+        if not user_id:
+            user_id = create_user(login_session)
+        login_session['user_id'] = user_id
+        return redirect(url_for('index'))
+    if provider == 'github':
+        github_flow = OAuth2Session(
+            client_id=github_client_id,
+            redirect_uri=github_redirect_uri,
+            state=state,
         )
-        response.headers['Content-type'] = 'application/json'
-        return response
-    google_id = data['user_id']
-    stored_credentials = login_session.get('credentials')
-    stored_google_id = login_session.get('google_id')
-    if stored_credentials is not None and google_id == stored_google_id:
-        response = make_response(
-            json.dumps('Current user is already connected'),
-            200,
+        auth_resp = request.url
+        token = github_flow.fetch_token(
+            github_token_uri,
+            client_secret=github_client_secret,
+            authorization_response=auth_resp,
         )
-        response.headers['Content-type'] = 'application/json'
-        return response
-    login_session['credentials'] = credentials_info
-    login_session['google_id'] = google_id
-    userinfo_url = 'https://www.googleapis.com/userinfo/v2/me'
-    params = {
-        'access_token': access_token,
-        'alt': 'json',
-    }
-    user_request = requests.get(userinfo_url, params=params)
-    user_data = user_request.json()
-    if user_data['id'] != google_id:
-        response = make_response(
-            json.dumps("Token's user ID doesn't match given user ID"),
-            401,
-        )
-        response.headers['Content-type'] = 'application/json'
-        return response
-    login_session['provider'] = 'google'
-    login_session['name'] = user_data['name']
-    login_session['picture'] = user_data['picture']
-    login_session['email'] = user_data['email']
-    user_id = get_user_id(login_session['email'])
-    if not user_id:
-        user_id = create_user(login_session)
-    login_session['user_id'] = user_id
-    return redirect(url_for('index'))
+        credentials = {
+            'access_token': token['access_token'],
+            'scope': token['scope'],
+            'token_type': token['token_type'],
+        }
+        access_token = token['access_token']
+        userinfo_url = 'https://api.github.com/user'
+        params = {
+            'access_token': access_token,
+            'alt': 'json',
+        }
+        user_request = requests.get(userinfo_url, params=params)
+        user_data = user_request.json()
+        github_id = user_data['id']
+        stored_credentials = login_session.get('credentials')
+        stored_github_id = login_session.get('github_id')
+        if stored_credentials is not None and github_id == stored_github_id:
+            response = make_response(
+                json.dumps('Current user is already connected'),
+                200,
+            )
+            response.headers['Content-type'] = 'application/json'
+            return response
+        login_session['credentials'] = credentials
+        login_session['github_id'] = github_id
+        login_session['provider'] = 'github'
+        login_session['name'] = user_data['name']
+        login_session['picture'] = user_data['avatar_url']
+        login_session['email'] = user_data['email']
+        user_id = get_user_id(login_session['email'])
+        if not user_id:
+            user_id = create_user(login_session)
+        login_session['user_id'] = user_id
+        return redirect(url_for('index'))
 
 
 @app.route('/logout')
