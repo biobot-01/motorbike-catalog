@@ -247,10 +247,11 @@ def oauth_callback(provider):
     state = login_session['state']
     if request.args.get('error'):
         response = make_response(
-            json.dumps(request.args.get('error') + ': You did not '
-                       'approve the access request'),
+            json.dumps(request.args.get('error')),
             401,
         )
+        response.headers['Content-type'] = 'application/json'
+        return response
     if provider == 'google':
         oauth_callback_google(state)
     if provider == 'github':
