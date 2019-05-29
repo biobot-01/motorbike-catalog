@@ -47,6 +47,20 @@ github_redirect_uri = github_secrets['web']['redirect_uri']
 github_scopes = ['read:user', 'user:email']
 
 
+def oauth_github(state):
+    github_flow = OAuth2Session(
+        client_id=github_client_id,
+        scope=github_scopes,
+        redirect_uri=github_redirect_uri,
+        state=state,
+    )
+    auth_url, state = github_flow.authorization_url(
+        github_auth_uri,
+        state=state,
+    )
+    return redirect(auth_url)
+
+
 def oauth_google(state):
     google_flow = Flow.from_client_secrets_file(
         google_secrets_file,
@@ -109,17 +123,7 @@ def oauth(provider):
     if provider == 'google':
         oauth_google(state)
     if provider == 'github':
-        github_flow = OAuth2Session(
-            client_id=github_client_id,
-            scope=github_scopes,
-            redirect_uri=github_redirect_uri,
-            state=state,
-        )
-        auth_url, state = github_flow.authorization_url(
-            github_auth_uri,
-            state=state,
-        )
-        return redirect(auth_url)
+        oauth_github(state)
 
 
 @app.route('/<provider>/callback')
