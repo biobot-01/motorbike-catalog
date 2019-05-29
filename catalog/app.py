@@ -47,6 +47,54 @@ github_redirect_uri = github_secrets['web']['redirect_uri']
 github_scopes = ['read:user', 'user:email']
 
 
+def oauth_callback_github(state):
+    github_flow = OAuth2Session(
+        client_id=github_client_id,
+        redirect_uri=github_redirect_uri,
+        state=state,
+    )
+    auth_resp = request.url
+    token = github_flow.fetch_token(
+        github_token_uri,
+        client_secret=github_client_secret,
+        authorization_response=auth_resp,
+    )
+    credentials = {
+        'access_token': token['access_token'],
+        'scope': token['scope'],
+        'token_type': token['token_type'],
+    }
+    access_token = token['access_token']
+    userinfo_url = 'https://api.github.com/user'
+    params = {
+        'access_token': access_token,
+        'alt': 'json',
+    }
+    user_request = requests.get(userinfo_url, params=params)
+    user_data = user_request.json()
+    github_id = user_data['id']
+    stored_credentials = login_session.get('credentials')
+    stored_github_id = login_session.get('github_id')
+    if stored_credentials is not None and github_id == stored_github_id:
+        response = make_response(
+            json.dumps('Current user is already connected'),
+            200,
+        )
+        response.headers['Content-type'] = 'application/json'
+        return response
+    login_session['credentials'] = credentials
+    login_session['github_id'] = github_id
+    login_session['provider'] = 'github'
+    login_session['name'] = user_data['name']
+    login_session['picture'] = user_data['avatar_url']
+    login_session['email'] = user_data['email']
+    user_id = get_user_id(login_session['email'])
+    if not user_id:
+        user_id = create_user(login_session)
+    login_session['user_id'] = user_id
+    return redirect(url_for('index'))
+
+
 def oauth_github(state):
     github_flow = OAuth2Session(
         client_id=github_client_id,
@@ -206,51 +254,7 @@ def oauth_callback(provider):
     if provider == 'google':
         oauth_callback_google(state)
     if provider == 'github':
-        github_flow = OAuth2Session(
-            client_id=github_client_id,
-            redirect_uri=github_redirect_uri,
-            state=state,
-        )
-        auth_resp = request.url
-        token = github_flow.fetch_token(
-            github_token_uri,
-            client_secret=github_client_secret,
-            authorization_response=auth_resp,
-        )
-        credentials = {
-            'access_token': token['access_token'],
-            'scope': token['scope'],
-            'token_type': token['token_type'],
-        }
-        access_token = token['access_token']
-        userinfo_url = 'https://api.github.com/user'
-        params = {
-            'access_token': access_token,
-            'alt': 'json',
-        }
-        user_request = requests.get(userinfo_url, params=params)
-        user_data = user_request.json()
-        github_id = user_data['id']
-        stored_credentials = login_session.get('credentials')
-        stored_github_id = login_session.get('github_id')
-        if stored_credentials is not None and github_id == stored_github_id:
-            response = make_response(
-                json.dumps('Current user is already connected'),
-                200,
-            )
-            response.headers['Content-type'] = 'application/json'
-            return response
-        login_session['credentials'] = credentials
-        login_session['github_id'] = github_id
-        login_session['provider'] = 'github'
-        login_session['name'] = user_data['name']
-        login_session['picture'] = user_data['avatar_url']
-        login_session['email'] = user_data['email']
-        user_id = get_user_id(login_session['email'])
-        if not user_id:
-            user_id = create_user(login_session)
-        login_session['user_id'] = user_id
-        return redirect(url_for('index'))
+        oauth_callback_github(state)
 
 
 @app.route('/logout')
