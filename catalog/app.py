@@ -237,9 +237,9 @@ def oauth(provider):
         response.headers['Content-type'] = 'application/json'
         return response
     if provider == 'google':
-        oauth_google(state)
+        return oauth_google(state)
     if provider == 'github':
-        oauth_github(state)
+        return oauth_github(state)
 
 
 @app.route('/<provider>/callback')
@@ -253,9 +253,9 @@ def oauth_callback(provider):
         response.headers['Content-type'] = 'application/json'
         return response
     if provider == 'google':
-        oauth_callback_google(state)
+        return oauth_callback_google(state)
     if provider == 'github':
-        oauth_callback_github(state)
+        return oauth_callback_github(state)
 
 
 @app.route('/logout')
