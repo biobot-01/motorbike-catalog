@@ -47,6 +47,37 @@ github_redirect_uri = github_secrets['web']['redirect_uri']
 github_scopes = ['read:user', 'user:email']
 
 
+def logout_google():
+    credentials = Credentials(**login_session['credentials'])
+    access_token = credentials.token
+    revoke_url = 'https://accounts.google.com/o/oauth2/revoke'
+    params = {'token': access_token}
+    headers = {'Content-type': 'application/x-www-form-urlencoded'}
+    revoke_request = requests.post(revoke_url, params=params, headers=headers)
+    status_code = revoke_request.status_code
+    if status_code == 200:
+        del login_session['credentials']
+        del login_session['google_id']
+        del login_session['name']
+        del login_session['picture']
+        del login_session['email']
+        del login_session['provider']
+        del login_session['user_id']
+        response = make_response(
+            json.dumps('Successfully disconnected'),
+            200,
+        )
+        response.headers['Content-type'] = 'application/json'
+        return response
+    else:
+        response = make_response(
+            json.dumps('Failed to revoke token for given user'),
+            400,
+        )
+        response.headers['Content-type'] = 'application/json'
+        return response
+
+
 def oauth_callback_github(state):
     github_flow = OAuth2Session(
         client_id=github_client_id,
@@ -292,34 +323,7 @@ def logout():
         )
         response.headers['Content-type'] = 'application/json'
         return response
-    credentials = Credentials(**login_session['credentials'])
-    access_token = credentials.token
-    revoke_url = 'https://accounts.google.com/o/oauth2/revoke'
-    params = {'token': access_token}
-    headers = {'Content-type': 'application/x-www-form-urlencoded'}
-    revoke_request = requests.post(revoke_url, params=params, headers=headers)
-    status_code = revoke_request.status_code
-    if status_code == 200:
-        del login_session['credentials']
-        del login_session['google_id']
-        del login_session['name']
-        del login_session['picture']
-        del login_session['email']
-        del login_session['provider']
-        del login_session['user_id']
-        response = make_response(
-            json.dumps('Successfully disconnected'),
-            200,
-        )
-        response.headers['Content-type'] = 'application/json'
-        return response
-    else:
-        response = make_response(
-            json.dumps('Failed to revoke token for given user'),
-            400,
-        )
-        response.headers['Content-type'] = 'application/json'
-        return response
+    return logout_google()
 
 
 @app.route('/')
