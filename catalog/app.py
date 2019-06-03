@@ -80,13 +80,6 @@ def logout_google():
     revoke_request = requests.post(revoke_url, params=params, headers=headers)
     status_code = revoke_request.status_code
     if status_code == 200:
-        del login_session['credentials']
-        del login_session['google_id']
-        del login_session['name']
-        del login_session['picture']
-        del login_session['email']
-        del login_session['provider']
-        del login_session['user_id']
         response = make_response(
             json.dumps('Successfully disconnected'),
             200,
@@ -350,14 +343,22 @@ def logout():
     if 'provider' in login_session:
         if login_session['provider'] == 'google':
             logout_google()
+            del login_session['google_id']
         if login_session['provider'] == 'github':
-            return logout_github()
-        # response = make_response(
-        #     json.dumps('You have successfully been logged out'),
-        #     200,
-        # )
-        # response.headers['Content-type'] = 'application/json'
-        # return response
+            logout_github()
+            del login_session['github_id']
+        del login_session['credentials']
+        del login_session['name']
+        del login_session['picture']
+        del login_session['email']
+        del login_session['provider']
+        del login_session['user_id']
+        response = make_response(
+            json.dumps('You have successfully been logged out'),
+            200,
+        )
+        response.headers['Content-type'] = 'application/json'
+        return response
     else:
         response = make_response(
             json.dumps('You were not logged in'),
