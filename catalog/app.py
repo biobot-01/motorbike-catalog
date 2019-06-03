@@ -47,6 +47,30 @@ github_redirect_uri = github_secrets['web']['redirect_uri']
 github_scopes = ['read:user', 'user:email']
 
 
+def logout_github():
+    credentials = login_session['credentials']
+    access_token = credentials['access_token']
+    revoke_url = ('https://api.github.com/applications/' +
+                  github_client_id + '/tokens/' + access_token)
+    auth = (github_client_id, github_client_secret)
+    revoke_request = requests.delete(revoke_url, auth=auth)
+    status_code = revoke_request.status_code
+    if status_code == 204:
+        response = make_response(
+            json.dumps('Successfully disconnected'),
+            200,
+        )
+        response.headers['Content-type'] = 'application/json'
+        return response
+    else:
+        response = make_response(
+            json.dumps('Failed to revoke token for given user'),
+            400,
+        )
+        response.headers['Content-type'] = 'application/json'
+        return response
+
+
 def logout_google():
     credentials = Credentials(**login_session['credentials'])
     access_token = credentials.token
@@ -96,8 +120,8 @@ def oauth_callback_github(state):
         'token_type': token['token_type'],
     }
     access_token = token['access_token']
-    auth_url = ('https://api.github.com/applications/' + github_client_id +
-                '/tokens/' + access_token)
+    auth_url = ('https://api.github.com/applications/' +
+                github_client_id + '/tokens/' + access_token)
     auth = (github_client_id, github_client_secret)
     result = requests.get(auth_url, auth=auth)
     data = result.json()
@@ -323,7 +347,24 @@ def logout():
         )
         response.headers['Content-type'] = 'application/json'
         return response
-    return logout_google()
+    if 'provider' in login_session:
+        if login_session['provider'] == 'google':
+            logout_google()
+        if login_session['provider'] == 'github':
+            return logout_github()
+        # response = make_response(
+        #     json.dumps('You have successfully been logged out'),
+        #     200,
+        # )
+        # response.headers['Content-type'] = 'application/json'
+        # return response
+    else:
+        response = make_response(
+            json.dumps('You were not logged in'),
+            401,
+        )
+        response.headers['Content-type'] = 'application/json'
+        return response
 
 
 @app.route('/')
