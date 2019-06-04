@@ -386,12 +386,12 @@ def index():
         manufacturers=manufacturers,
         motorbikes=latest_motorbikes,
         STATE=state,
-        CLIENT_ID=google_client_id,
     )
 
 
 @app.route('/motorbikes/<manufacturer_slug>')
 def motorbikes(manufacturer_slug):
+    state = login_session['state']
     manufacturers = session.query(Manufacturer).order_by(
         Manufacturer.slug).all()
     manufacturer = session.query(Manufacturer).filter_by(
@@ -410,14 +410,20 @@ def motorbikes(manufacturer_slug):
         manufacturer=manufacturer,
         motorbikes=motorbikes,
         count=count,
+        STATE=state,
     )
 
 
 @app.route('/motorbikes/<manufacturer_slug>/models/<motorbike_slug>')
 def motorbike(manufacturer_slug, motorbike_slug):
+    state = login_session['state']
     motorbike = session.query(Motorbike).filter_by(
             slug=motorbike_slug).first()
-    return render_template('motorbike.html', motorbike=motorbike)
+    return render_template(
+        'motorbike.html',
+        motorbike=motorbike,
+        STATE=state,
+    )
 
 
 @app.route(
