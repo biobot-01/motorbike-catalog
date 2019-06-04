@@ -430,6 +430,8 @@ def motorbike(manufacturer_slug, motorbike_slug):
     '/motorbikes/<manufacturer_slug>/models/new',
     methods=['GET', 'POST'])
 def new_motorbike(manufacturer_slug):
+    if 'name' not in login_session:
+        return redirect(url_for('index'))
     manufacturer = session.query(Manufacturer).filter_by(
         slug=manufacturer_slug).first()
     if request.method == 'POST':
@@ -475,6 +477,8 @@ def new_motorbike(manufacturer_slug):
     '/motorbikes/<manufacturer_slug>/models/<motorbike_slug>/edit',
     methods=['GET', 'POST'])
 def edit_motorbike(manufacturer_slug, motorbike_slug):
+    if 'name' not in login_session:
+        return redirect(url_for('index'))
     motorbike = session.query(Motorbike).filter_by(
         slug=motorbike_slug).first()
     if request.method == 'POST':
@@ -527,6 +531,8 @@ def edit_motorbike(manufacturer_slug, motorbike_slug):
     '/motorbikes/<manufacturer_slug>/models/<motorbike_slug>/delete',
     methods=['GET', 'POST'])
 def delete_motorbike(manufacturer_slug, motorbike_slug):
+    if 'name' not in login_session:
+        return redirect(url_for('index'))
     motorbike = session.query(Motorbike).filter_by(
         slug=motorbike_slug).first()
     if request.method == 'POST':
