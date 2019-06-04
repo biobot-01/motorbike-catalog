@@ -11,7 +11,9 @@
 
         <div class="column">
           <div class="content">
-            <a class="button is-primary is-medium" href="{{ url_for('new_motorbike', manufacturer_slug=manufacturer.slug) }}">Add Model</a>
+            {% if 'name' in session %}
+              <a class="button is-primary is-medium" href="{{ url_for('new_motorbike', manufacturer_slug=manufacturer.slug) }}">Add Model</a>
+            {% endif %}
 
             <h3>{{ manufacturer.name }} <span>({{ count }} models)</span></h3>
 

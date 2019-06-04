@@ -60,8 +60,10 @@
 
       <div class="card-footer">
         <a class="card-footer-item" href="{{ url_for('motorbikes', manufacturer_slug=motorbike.manufacturer.slug) }}">Back</a>
-        <a class="card-footer-item" href="{{ url_for('edit_motorbike', manufacturer_slug=motorbike.manufacturer.slug, motorbike_slug=motorbike.slug) }}">Edit</a>
-        <a class="card-footer-item" href="{{ url_for('delete_motorbike', manufacturer_slug=motorbike.manufacturer.slug, motorbike_slug=motorbike.slug) }}">Delete</a>
+        {% if 'name' in session %}
+          <a class="card-footer-item" href="{{ url_for('edit_motorbike', manufacturer_slug=motorbike.manufacturer.slug, motorbike_slug=motorbike.slug) }}">Edit</a>
+          <a class="card-footer-item" href="{{ url_for('delete_motorbike', manufacturer_slug=motorbike.manufacturer.slug, motorbike_slug=motorbike.slug) }}">Delete</a>
+        {% endif %}
       </div>
     </div>
   </div>
