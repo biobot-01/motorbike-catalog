@@ -293,11 +293,6 @@ def get_user_id(email):
         return None
 
 
-def get_user_info(user_id):
-    user = session.query(User).filter_by(id=user_id).one()
-    return user
-
-
 def credentials_to_dict(credentials):
     return {
         'token': credentials.token,
