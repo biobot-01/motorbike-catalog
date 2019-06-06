@@ -18,8 +18,8 @@ session = DBSession()
 
 users = [
     {
-        'email': 'kevingsx@gmail.com',
-        'name': 'Kevin Michael',
+        'email': 'jane_doe@example.com',
+        'name': 'Jane Doe',
         'picture': '/static/img/default-user.png',
     },
     {
@@ -443,6 +443,7 @@ def add_bikes(list_of_bikes):
             max_torque=dic['max_torque'],
             image=dic['image'],
             manufacturer_id=dic['manufacturer_id'],
+            user_id=dic['user_id'],
         )
         session.add(bike)
     session.commit()
