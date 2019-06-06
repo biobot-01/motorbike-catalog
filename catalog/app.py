@@ -5,7 +5,7 @@ import os
 from secrets import token_urlsafe
 
 from flask import (Flask, render_template, request, redirect, url_for,
-                   session as login_session, make_response)
+                   session as login_session, make_response, flash)
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from slugify import slugify
@@ -166,6 +166,9 @@ def oauth_callback_github(state):
     if not user_id:
         user_id = create_user(login_session)
     login_session['user_id'] = user_id
+    flash(
+        'You are now logged in as {}'.format(login_session['name']),
+        category='success')
     return redirect(url_for('index'))
 
 
@@ -247,6 +250,9 @@ def oauth_callback_google(state):
     if not user_id:
         user_id = create_user(login_session)
     login_session['user_id'] = user_id
+    flash(
+        'You are now logged in as {}'.format(login_session['name']),
+        category='success')
     return redirect(url_for('index'))
 
 
@@ -358,19 +364,13 @@ def logout():
         del login_session['email']
         del login_session['provider']
         del login_session['user_id']
-        response = make_response(
-            json.dumps('You have successfully been logged out'),
-            200,
-        )
-        response.headers['Content-type'] = 'application/json'
-        return response
+        flash(
+            'You have successfully been logged out',
+            category='success')
+        return redirect(url_for('index'))
     else:
-        response = make_response(
-            json.dumps('You were not logged in'),
-            401,
-        )
-        response.headers['Content-type'] = 'application/json'
-        return response
+        flash('You were not logged in', category='info')
+        return redirect(url_for('index'))
 
 
 @app.route('/')
@@ -431,6 +431,9 @@ def motorbike(manufacturer_slug, motorbike_slug):
     methods=['GET', 'POST'])
 def new_motorbike(manufacturer_slug):
     if 'name' not in login_session:
+        flash(
+            'You must log in to add a new motorbike',
+            category='warning')
         return redirect(url_for(
             'motorbikes',
             manufacturer_slug=manufacturer_slug))
@@ -470,6 +473,9 @@ def new_motorbike(manufacturer_slug):
             )
             session.add(motorbike)
             session.commit()
+            flash(
+                'New {} {} model created'.format(model, year),
+                category='success')
         return redirect(url_for(
             'motorbikes',
             manufacturer_slug=manufacturer_slug))
@@ -481,6 +487,9 @@ def new_motorbike(manufacturer_slug):
     methods=['GET', 'POST'])
 def edit_motorbike(manufacturer_slug, motorbike_slug):
     if 'name' not in login_session:
+        flash(
+            'You must log in to edit this motorbike',
+            category='warning')
         return redirect(url_for(
             'motorbike',
             manufacturer_slug=manufacturer_slug,
@@ -489,6 +498,9 @@ def edit_motorbike(manufacturer_slug, motorbike_slug):
         slug=motorbike_slug).first()
     creator = get_user_info(motorbike.user_id)
     if creator.id != login_session['user_id']:
+        flash(
+            'You must be the creator to edit this motorbike',
+            category='danger')
         return redirect(url_for(
             'motorbike',
             manufacturer_slug=manufacturer_slug,
@@ -531,6 +543,7 @@ def edit_motorbike(manufacturer_slug, motorbike_slug):
             motorbike.image = image
         session.add(motorbike)
         session.commit()
+        flash('Model successfully updated', category='success')
         return redirect(url_for(
             'motorbike',
             manufacturer_slug=manufacturer_slug,
@@ -544,6 +557,9 @@ def edit_motorbike(manufacturer_slug, motorbike_slug):
     methods=['GET', 'POST'])
 def delete_motorbike(manufacturer_slug, motorbike_slug):
     if 'name' not in login_session:
+        flash(
+            'You must log in to delete this motorbike',
+            category='warning')
         return redirect(url_for(
             'motorbike',
             manufacturer_slug=manufacturer_slug,
@@ -552,6 +568,9 @@ def delete_motorbike(manufacturer_slug, motorbike_slug):
         slug=motorbike_slug).first()
     creator = get_user_info(motorbike.user_id)
     if creator.id != login_session['user_id']:
+        flash(
+            'You must be the creator to delete this motorbike',
+            category='danger')
         return redirect(url_for(
             'motorbike',
             manufacturer_slug=manufacturer_slug,
@@ -559,6 +578,7 @@ def delete_motorbike(manufacturer_slug, motorbike_slug):
     if request.method == 'POST':
         session.delete(motorbike)
         session.commit()
+        flash('Model successfully deleted', category='success')
         return redirect(url_for(
             'motorbikes',
             manufacturer_slug=manufacturer_slug))

@@ -15,6 +15,8 @@
 
     <section class="section has-background-light {{ active_page }}">
       <div class="container">
+        {% include 'includes/_flash-message.html' %}
+
         {% block content%}{% endblock %}
       </div>
     </section>
