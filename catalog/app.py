@@ -281,7 +281,7 @@ def create_user(login_session):
     session.add(user)
     session.commit()
     user = session.query(User).filter_by(
-        email=login_session['email']).first()
+        email=login_session['email']).one()
     return user.id
 
 
@@ -486,6 +486,8 @@ def new_motorbike(manufacturer_slug):
     '/motorbikes/<manufacturer_slug>/models/<motorbike_slug>/edit',
     methods=['GET', 'POST'])
 def edit_motorbike(manufacturer_slug, motorbike_slug):
+    motorbike = session.query(Motorbike).filter_by(
+        slug=motorbike_slug).first()
     if 'name' not in login_session:
         flash(
             'You must log in to edit this motorbike',
@@ -493,18 +495,17 @@ def edit_motorbike(manufacturer_slug, motorbike_slug):
         return redirect(url_for(
             'motorbike',
             manufacturer_slug=manufacturer_slug,
-            motorbike_slug=motorbike_slug))
-    motorbike = session.query(Motorbike).filter_by(
-        slug=motorbike_slug).first()
-    creator = get_user_info(motorbike.user_id)
-    if creator.id != login_session['user_id']:
+            motorbike_slug=motorbike_slug,
+        ))
+    if motorbike.user_id != login_session['user_id']:
         flash(
             'You must be the creator to edit this motorbike',
             category='danger')
         return redirect(url_for(
             'motorbike',
             manufacturer_slug=manufacturer_slug,
-            motorbike_slug=motorbike_slug))
+            motorbike_slug=motorbike_slug,
+        ))
     if request.method == 'POST':
         model = request.form['model']
         year = request.form['year']
@@ -556,6 +557,8 @@ def edit_motorbike(manufacturer_slug, motorbike_slug):
     '/motorbikes/<manufacturer_slug>/models/<motorbike_slug>/delete',
     methods=['GET', 'POST'])
 def delete_motorbike(manufacturer_slug, motorbike_slug):
+    motorbike = session.query(Motorbike).filter_by(
+        slug=motorbike_slug).first()
     if 'name' not in login_session:
         flash(
             'You must log in to delete this motorbike',
@@ -563,18 +566,17 @@ def delete_motorbike(manufacturer_slug, motorbike_slug):
         return redirect(url_for(
             'motorbike',
             manufacturer_slug=manufacturer_slug,
-            motorbike_slug=motorbike_slug))
-    motorbike = session.query(Motorbike).filter_by(
-        slug=motorbike_slug).first()
-    creator = get_user_info(motorbike.user_id)
-    if creator.id != login_session['user_id']:
+            motorbike_slug=motorbike_slug,
+        ))
+    if motorbike.user_id != login_session['user_id']:
         flash(
             'You must be the creator to delete this motorbike',
             category='danger')
         return redirect(url_for(
             'motorbike',
             manufacturer_slug=manufacturer_slug,
-            motorbike_slug=motorbike_slug))
+            motorbike_slug=motorbike_slug,
+        ))
     if request.method == 'POST':
         session.delete(motorbike)
         session.commit()
