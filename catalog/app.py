@@ -431,7 +431,9 @@ def motorbike(manufacturer_slug, motorbike_slug):
     methods=['GET', 'POST'])
 def new_motorbike(manufacturer_slug):
     if 'name' not in login_session:
-        return redirect(url_for('index'))
+        return redirect(url_for(
+            'motorbikes',
+            manufacturer_slug=manufacturer_slug))
     manufacturer = session.query(Manufacturer).filter_by(
         slug=manufacturer_slug).first()
     if request.method == 'POST':
@@ -469,7 +471,8 @@ def new_motorbike(manufacturer_slug):
             session.add(motorbike)
             session.commit()
         return redirect(url_for(
-            'motorbikes', manufacturer_slug=manufacturer_slug))
+            'motorbikes',
+            manufacturer_slug=manufacturer_slug))
     return render_template('new-motorbike.html', manufacturer=manufacturer)
 
 
@@ -478,9 +481,18 @@ def new_motorbike(manufacturer_slug):
     methods=['GET', 'POST'])
 def edit_motorbike(manufacturer_slug, motorbike_slug):
     if 'name' not in login_session:
-        return redirect(url_for('index'))
+        return redirect(url_for(
+            'motorbike',
+            manufacturer_slug=manufacturer_slug,
+            motorbike_slug=motorbike_slug))
     motorbike = session.query(Motorbike).filter_by(
         slug=motorbike_slug).first()
+    creator = get_user_info(motorbike.user_id)
+    if creator.id != login_session['user_id']:
+        return redirect(url_for(
+            'motorbike',
+            manufacturer_slug=manufacturer_slug,
+            motorbike_slug=motorbike_slug))
     if request.method == 'POST':
         model = request.form['model']
         year = request.form['year']
@@ -532,9 +544,18 @@ def edit_motorbike(manufacturer_slug, motorbike_slug):
     methods=['GET', 'POST'])
 def delete_motorbike(manufacturer_slug, motorbike_slug):
     if 'name' not in login_session:
-        return redirect(url_for('index'))
+        return redirect(url_for(
+            'motorbike',
+            manufacturer_slug=manufacturer_slug,
+            motorbike_slug=motorbike_slug))
     motorbike = session.query(Motorbike).filter_by(
         slug=motorbike_slug).first()
+    creator = get_user_info(motorbike.user_id)
+    if creator.id != login_session['user_id']:
+        return redirect(url_for(
+            'motorbike',
+            manufacturer_slug=manufacturer_slug,
+            motorbike_slug=motorbike_slug))
     if request.method == 'POST':
         session.delete(motorbike)
         session.commit()
