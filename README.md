@@ -60,7 +60,8 @@ To create an OAuth 2.0 client ID in the console:
 
 ## Setting up Github OAuth 2.0
 This is required to authenticate users signing into the application. You can refer to [Github Oauth 2.0](https://developer.github.com/apps/building-oauth-apps/creating-an-oauth-app/) for further information.
-The link is a step-by-step guide which you can follow. 1. Set __Homepage URL__ to http://localhost:8000.
+The link is a step-by-step guide which you can follow.
+1. Set __Homepage URL__ to http://localhost:8000.
 1. The __User authorization callback URL__ must be http://localhost:8000/github/callback.
 1. Once you have registered the app, it will give you the __Client ID__ and __Client Secret__.
 1. In the project root directory there is a file called github_secrets_example.json. Rename this file to github_secrets.json.
