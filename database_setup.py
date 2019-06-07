@@ -15,7 +15,7 @@ Base.metadata.bind = engine
 DBSession = sessionmaker(bind=engine)
 # Create a session for the database
 session = DBSession()
-
+# Dummy users data
 users = [
     {
         'email': 'jane_doe@example.com',
@@ -28,7 +28,7 @@ users = [
         'picture': '/static/img/default-user.png',
     },
 ]
-
+# Dummy manufacturers data
 manufacturers = [
     'Aprilia',
     'BMW',
@@ -43,7 +43,7 @@ manufacturers = [
     'Triumph',
     'Yamaha'
 ]
-
+# Dummy bikes data
 bikes = [
     {
         'model': 'Tuono V4 1100 Factory',
@@ -411,6 +411,7 @@ bikes = [
 ]
 
 
+# Loop through users data & add to the database
 def add_users(list_of_users):
     for dic in list_of_users:
         user = User(
@@ -422,6 +423,7 @@ def add_users(list_of_users):
     session.commit()
 
 
+# Loop through manufacturers data & add to the database
 def add_manufacturers(list_of_names):
     for name in list_of_names:
         manufacturer = Manufacturer(slug=slugify(name), name=name)
@@ -429,6 +431,7 @@ def add_manufacturers(list_of_names):
     session.commit()
 
 
+# Loop through bikes data & add to the database
 def add_bikes(list_of_bikes):
     for dic in list_of_bikes:
         bike = Motorbike(
@@ -449,6 +452,7 @@ def add_bikes(list_of_bikes):
     session.commit()
 
 
+# Main function that executes when the file is run
 def main():
     print('Adding data to database...')
     add_users(users)

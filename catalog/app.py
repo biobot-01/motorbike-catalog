@@ -26,14 +26,15 @@ Base.metadata.bind = engine
 DBSession = sessionmaker(bind=engine)
 # Create a session for the database
 session = DBSession()
-
+# Client ID files to read from
 google_secrets_file = 'google_secrets.json'
 github_secrets_file = 'github_secrets.json'
+# Read the file and load it as JSON data object
 with open(google_secrets_file) as f:
     google_secrets = json.load(f)
 with open(github_secrets_file) as f:
     github_secrets = json.load(f)
-
+# Client ID variables for authentication
 google_client_id = google_secrets['web']['client_id']
 google_redirect_uri = google_secrets['web']['redirect_uris'][1]
 google_scopes = [
@@ -48,6 +49,7 @@ github_redirect_uri = github_secrets['web']['redirect_uri']
 github_scopes = ['read:user', 'user:email']
 
 
+# Function to logout user who authenticated with github
 def logout_github():
     credentials = login_session['credentials']
     access_token = credentials['access_token']
@@ -72,6 +74,7 @@ def logout_github():
         return response
 
 
+# Function to logout user who authenticated with google
 def logout_google():
     credentials = Credentials(**login_session['credentials'])
     access_token = credentials.token
@@ -96,6 +99,7 @@ def logout_google():
         return response
 
 
+# Callback function to redirect back to website during authentication
 def oauth_callback_github(state):
     github_flow = OAuth2Session(
         client_id=github_client_id,
@@ -173,6 +177,7 @@ def oauth_callback_github(state):
     return redirect(url_for('index'))
 
 
+# Start authentication process
 def oauth_github(state):
     github_flow = OAuth2Session(
         client_id=github_client_id,
@@ -187,6 +192,7 @@ def oauth_github(state):
     return redirect(auth_url)
 
 
+# Callback function to redirect back to website during authentication
 def oauth_callback_google(state):
     google_flow = Flow.from_client_secrets_file(
         google_secrets_file,
@@ -257,6 +263,7 @@ def oauth_callback_google(state):
     return redirect(url_for('index'))
 
 
+# Start authentication process
 def oauth_google(state):
     google_flow = Flow.from_client_secrets_file(
         google_secrets_file,
@@ -273,6 +280,7 @@ def oauth_google(state):
     return redirect(auth_url)
 
 
+# Create a new user
 def create_user(login_session):
     user = User(
         name=login_session['name'],
@@ -286,6 +294,7 @@ def create_user(login_session):
     return user.id
 
 
+# Get a user id
 def get_user_id(email):
     try:
         user = session.query(User).filter_by(email=email).one()
@@ -294,6 +303,8 @@ def get_user_id(email):
         return None
 
 
+# Convert google credentials object to dictionary to store
+# in login_session
 def credentials_to_dict(credentials):
     return {
         'token': credentials.token,
@@ -306,6 +317,7 @@ def credentials_to_dict(credentials):
     }
 
 
+# Login route based on provider
 @app.route('/oauth/<provider>')
 def oauth(provider):
     state = login_session['state']
@@ -322,6 +334,7 @@ def oauth(provider):
         return oauth_github(state)
 
 
+# Callback route based on provider
 @app.route('/<provider>/callback')
 def oauth_callback(provider):
     state = login_session['state']
@@ -338,6 +351,7 @@ def oauth_callback(provider):
         return oauth_callback_github(state)
 
 
+# Logout route which checks the provider & logs out accordingly
 @app.route('/logout')
 def logout():
     if 'credentials' not in login_session:
@@ -369,6 +383,7 @@ def logout():
         return redirect(url_for('index'))
 
 
+# Home page of the app
 @app.route('/')
 def index():
     state = token_urlsafe(32)
@@ -385,6 +400,7 @@ def index():
     )
 
 
+# Route to read bikes based on manufacturer
 @app.route('/motorbikes/<manufacturer_slug>')
 def motorbikes(manufacturer_slug):
     state = login_session['state']
@@ -410,6 +426,7 @@ def motorbikes(manufacturer_slug):
     )
 
 
+# Route to read bike model of manufacturer
 @app.route('/motorbikes/<manufacturer_slug>/models/<motorbike_slug>')
 def motorbike(manufacturer_slug, motorbike_slug):
     state = login_session['state']
@@ -422,6 +439,7 @@ def motorbike(manufacturer_slug, motorbike_slug):
     )
 
 
+# Route to create a new bike model based on manufacturer
 @app.route(
     '/motorbikes/<manufacturer_slug>/models/new',
     methods=['GET', 'POST'])
@@ -478,6 +496,7 @@ def new_motorbike(manufacturer_slug):
     return render_template('new-motorbike.html', manufacturer=manufacturer)
 
 
+# Route to update a bike model based on manufacturer
 @app.route(
     '/motorbikes/<manufacturer_slug>/models/<motorbike_slug>/edit',
     methods=['GET', 'POST'])
@@ -549,6 +568,7 @@ def edit_motorbike(manufacturer_slug, motorbike_slug):
     return render_template('edit-motorbike.html', motorbike=motorbike)
 
 
+# Route to delete a bike model based on manufacturer
 @app.route(
     '/motorbikes/<manufacturer_slug>/models/<motorbike_slug>/delete',
     methods=['GET', 'POST'])
