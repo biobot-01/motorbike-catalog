@@ -26,6 +26,14 @@ class Manufacturer(Base):
     slug = Column(String(250), index=True, nullable=False)
     name = Column(String(60), nullable=False)
 
+    @property
+    def serialize(self):
+        """Return JSON data for API"""
+        return {
+            'id': self.id,
+            'name': self.name,
+        }
+
 
 class Motorbike(Base):
     __tablename__ = 'motorbikes'
@@ -46,6 +54,22 @@ class Motorbike(Base):
     manufacturer = relationship(Manufacturer)
     user_id = Column(Integer, ForeignKey('users.id'))
     user = relationship(User)
+
+    @property
+    def serialize(self):
+        """Return JSON data for API"""
+        return {
+            'id': self.id,
+            'model': self.model,
+            'year': self.year,
+            'engine': self.engine,
+            'displacement': self.displacement,
+            'curb_mass': self.curb_mass,
+            'fuel_capacity': self.fuel_capacity,
+            'max_power': self.max_power,
+            'max_torque': self.max_torque,
+            'image': self.image,
+        }
 
 
 engine = create_engine('sqlite:///motorbike_catalog.db')
