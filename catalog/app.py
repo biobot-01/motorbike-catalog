@@ -5,7 +5,8 @@ import os
 from secrets import token_urlsafe
 
 from flask import (Flask, render_template, request, redirect, url_for,
-                   session as login_session, make_response, flash)
+                   session as login_session, make_response, flash,
+                   jsonify)
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from slugify import slugify
@@ -582,6 +583,30 @@ def delete_motorbike(manufacturer_slug, motorbike_slug):
     return render_template(
         'delete-motorbike.html',
         motorbike=motorbike)
+
+
+# JSON API Routes
+@app.route('/api/manufacturers')
+def api_manufacturers():
+    manufacturers = session.query(Manufacturer).all()
+    return jsonify(manufacturers=[m.serialize for m in manufacturers])
+
+
+@app.route('/api/motorbikes')
+def api_motorbikes():
+    motorbikes = session.query(Motorbike).all()
+    return jsonify(motorbikes=[m.serialize for m in motorbikes])
+
+
+@app.route(
+    '/api/motorbikes/<int:motorbike_id>')
+def api_motorbike(motorbike_id):
+    motorbike = session.query(Motorbike).filter_by(
+        id=motorbike_id,
+    ).first()
+    if motorbike is None:
+        return jsonify(error='No model with id {}'.format(motorbike_id))
+    return jsonify(motorbike=motorbike.serialize)
 
 
 def main():
