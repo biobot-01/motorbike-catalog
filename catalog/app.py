@@ -610,6 +610,7 @@ def api_motorbike(motorbike_id):
 
 
 def main():
+    # When running locally, disable OAuthlib's HTTPs verification
     os.environ['OAUTHLIB_INSECURE_TRANSPORT'] = '1'
     app.secret_key = 'super_secret_key'
     app.debug = True
