@@ -7,6 +7,7 @@ Flask web application that lists motorbikes by their manufacturer.
 * [Project Setup](#project-setup)
 * [Setting up Google OAuth 2.0](#setting-up-google-oauth-20)
 * [Setting up Github OAuth 2.0](#setting-up-github-oauth-20)
+* [API Endpoints](#api-endpoints)
 
 ## Project Overview
 This project is about developing a web application that provides a list of items(bikes) within a variety of categories(manufacturers), & integrates third party user registration & authentication.
@@ -66,3 +67,9 @@ The link is a step-by-step guide which you can follow.
 1. Once you have registered the app, it will give you the __Client ID__ and __Client Secret__.
 1. In the project root directory there is a file called github_secrets_example.json. Rename this file to github_secrets.json.
 1. Enter the __Client ID__ and __Client Secret__ int this file.
+
+## API Endpoints
+Base URL `http://localhost:8000/api`
+To view all manufacturers `base_url/manufacturers`
+To view all motorbikes `base_url/motorbikes`
+To view a motorbike model `base_url/motorbikes/{id}`
