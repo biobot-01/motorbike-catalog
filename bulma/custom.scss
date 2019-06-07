@@ -1,0 +1,43 @@
+@charset "utf-8";
+
+// Import a Google Font
+@import url("https://fonts.googleapis.com/css?family=Nunito:400,700");
+
+// Set your brand colors
+$oxford-blue: #002642;
+$burgundy-red: #840032;
+$harvest-gold: #e59500;
+$gainsboro-grey: #e5dada;
+$rich-black: #02040f;
+$white: #fff;
+
+// Update Bulma's global variables
+$family-sans-serif: "Nunito", sans-serif;
+$grey-lighter: $gainsboro-grey;
+$primary: $oxford-blue;
+$text: $rich-black;
+$text-white: $white;
+$link: $burgundy-red;
+$link-hover: $harvest-gold;
+$link-hover-border: $burgundy-red;
+$widescreen-enabled: false;
+$fullhd-enabled: false;
+
+// Update some of Bulma's component variables
+$body-background-color: $gainsboro-grey;
+$control-border-width: 2px;
+$input-border-color: transparent;
+$input-shadow: none;
+$menu-item-hover-color: $text-white;
+$menu-item-hover-background-color: $link-hover;
+
+@import "../node_modules/bulma/bulma.sass";
+
+@media screen and (min-width: 769px), print {
+  .delete-motorbike {
+    .columns:not(.is-desktop) {
+      align-items: center;
+      min-height: 60vh;
+    }
+  }
+}
