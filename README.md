@@ -5,8 +5,8 @@ Flask web application that lists motorbikes by their manufacturer.
 * [Project Overview](#project-overview)
 * [Requirements](#requirements)
 * [Project Setup](#project-setup)
-* [Setting up Google OAuth 2.0](#setting-up-google-oauth-2.0)
-* [Setting up Github OAuth 2.0](#setting-up-github-oauth-2.0)
+* [Setting up Google OAuth 2.0](#setting-up-google-oauth-20)
+* [Setting up Github OAuth 2.0](#setting-up-github-oauth-20)
 
 ## Project Overview
 This project is about developing a web application that provides a list of items(bikes) within a variety of categories(manufacturers), & integrates third party user registration & authentication.
@@ -30,8 +30,8 @@ In order to run this project, you will need to have the following:
 ## Project Setup
 1. Clone the git repo `$ git clone git@github.com:biobot-01/motorbike-catalog.git`
 1. Change directory `$ cd motorbike-catalog`
-1. Setup [Google Client ID](#setting-up-google-oauth-2.0)
-1. Setup [Github Client ID](#setting-up-github-oauth-2.0)
+1. Setup [Google Client ID](#setting-up-google-oauth-20)
+1. Setup [Github Client ID](#setting-up-github-oauth-20)
 1. Setup Python virtual environment [(venv)](https://docs.python.org/3.6/library/venv.html) `$ python3 -m venv .venv/flask`
 1. Activate Python venv `$ source .venv/flask/bin/activate`
 1. Update pip `$ pip install -U pip`
